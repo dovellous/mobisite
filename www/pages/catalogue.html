@@ -1,0 +1,168 @@
+<template>
+    <div class="page navbar-fixed" data-page="home">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a class="link icon-only panel-open" data-panel="left" href="#">
+                        <i class="icon material-icons md-only">menu</i>
+                    </a>
+                </div>
+                <div class="title">${page_title}</div>
+                <div class="right">
+                    <a href="#" class="link back popover-open" href="#" data-popover=".popover-links">
+                        <i class="icon f7-icons">more_vert</i>
+                    </a>
+                </div>
+
+                <!-- Subnavbar -->
+                <div class="subnavbar">
+                    <div class="subnavbar-inner">
+                        <!-- Subnavbar content, for example tabs buttons -->
+                        <div class="segmented">
+                            <a href="#sctTab1" class="button tab-link button-active">Popular Requests</a>
+                            <a href="#sctTab2" class="button tab-link">Recent Requests</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="page-content hide-navbar-on-scroll bg-pattern">
+
+            <div class="tabs">
+                <div class=" tab tab-active" id="sctTab1">
+
+                    ${tiles.map((tile) => $h`
+                        <a href="/new-request/${tile.request_id}/${tile.form_id}/${tile.approver_team_id}/">
+                            <div class="card demo-card-header-pic">
+                                <div style="background-image:url(${tile.image})"
+                                     class="card-header align-items-flex-end catalog-bg">
+                                </div>
+                                <div class="card-footer ${tile.footer_class}">
+                                    <a href="#" class="link"><h3 class="date"> ${tile.subject}</h3></a>
+                                    <a href="#" class="link"><strong>${tile.cnt}</strong></a></div>
+                            </div>
+                        </a>
+
+                    `)}
+
+
+
+                </div>
+                <div class="tab" id="sctTab2">
+                    <div class="list inset">
+                        <ul>
+                            ${requests.map((request) => $h`
+
+                                <li>
+                                    <a href="/request-details/0/${request.id}/${request.rfq_number}/" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">doc_append</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>${request.rfq_number}</strong></div>
+                                                ${request.rfq_name}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+
+                            `)}
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</template>
+<style>
+
+    .catalog-bg {
+        min-height: 240px !important;
+        background-size: cover;
+    }
+
+</style>
+<script>
+    export default (props, {$f7route, $f7ready, $f7, $on, $update}) => {
+
+        let page_title = "Requests";
+
+        let catalog_items = [];
+
+        let tiles = [];
+
+        let requests = [];
+
+
+
+        $on('pageInit', () => {
+
+            console.log('page_title:', page_title, 'page init');
+
+            //console.log("LOAD SCT Data");
+
+            window.RequesitionsMINE = [];
+            let userId = window.localStorage.getItem('userId');
+            $f7.request.get('https://commercial.hyperefficient2.net/app/get_recent_requests/' + userId ).then((res) => {
+                // update user with new data
+                var _requests_ =  JSON.parse( res.data );
+                var _requests = _requests_.quotes;
+
+                requests = Object.keys(_requests).map((key) => _requests[key]);
+                // trigger re-render
+                $update();
+
+            }).catch(function (err) {
+                console.log("HTTP ERROR");
+                console.log(err.xhr);
+                console.log(err.status);
+                console.log(err.message);
+                MainAppErrors.error_http("Could not load contacts");
+            });
+
+            $f7.request.get('https://commercial.hyperefficient2.net/app/get_user_tiles/' + userId ).then((res) => {
+                var _tiles_ =  JSON.parse( res.data );
+                var _tiles = _tiles_.user_requests;
+
+                tiles = Object.keys(_tiles).map((key) => _tiles[key]);
+                // trigger re-render
+                $update();
+            })
+
+        });
+
+        $on('pageMounted', (e, page) => {
+
+            console.log('page_title:', page_title, 'page mounted');
+
+
+        });
+        $on('pageBeforeIn', (e, page) => {
+            console.log('page_title:', page_title, 'page before in');
+        });
+        $on('pageAfterIn', (e, page) => {
+            console.log('page_title:', page_title, 'page after in');
+        });
+        $on('pageBeforeOut', (e, page) => {
+            console.log('page_title:', page_title, 'page before out');
+        });
+        $on('pageAfterOut', (e, page) => {
+            console.log('page_title:', page_title, 'page after out');
+        });
+        $on('pageBeforeUnmount', (e, page) => {
+            console.log('page_title:', page_title, 'page before unmount');
+        });
+        $on('pageBeforeRemove', (e, page) => {
+            console.log('page_title:', page_title, 'page before remove');
+        });
+
+        return $render;
+    }
+</script>

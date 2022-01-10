@@ -1,0 +1,199 @@
+.tab-bar-labels {
+
+    calc(var(--f7-tabbar-label-font-size)/1.5);
+
+}
+
+.home-cards-container{
+    margin-top: calc(var(--f7-card-margin-vertical)/2);
+}
+
+.home-cards{
+    margin: calc(var(--f7-card-margin-vertical)/2) 0;
+    height: unset;
+}
+
+.home-cards h1{
+    color: var(--f7-theme-color);
+}
+
+.home-tiles-text {
+    white-space: pre-line;
+    text-overflow: ellipsis;
+}
+
+.md .tabbar-label {
+    max-width: 100%;
+    overflow: hidden;
+    line-height: 1.2;
+    font-size: 8px;
+}
+
+.page-content.pattern {
+
+    background-color: #eeeeee;
+
+}
+
+.list-item-no-arrow {
+
+    padding-right: 0 !important;
+
+}
+.list-item-no-arrow:before, .item-title-row.list-item-no-arrow:before {
+
+   display: none !important;
+
+}
+
+.panel-f7-icons {
+    font-size: 22px;
+    opacity: 1;
+    color: var(--f7-theme-color) !important;
+    margin-left: 8px;
+}
+
+.chat-title {
+    font-size: 18px;
+}
+.chat-subtitle {
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+.login-btn-container {
+    padding-right: calc(var(--f7-list-item-padding-horizontal) + var(--f7-safe-area-left) - var(--menu-list-offset));
+    padding-left: calc(var(--f7-list-item-padding-horizontal) + var(--f7-safe-area-left) - var(--menu-list-offset));
+}
+
+.bg-pattern {
+    background-image: url(../static/images/bg.png);
+    background-size: 40%;
+}
+
+.reset-position{
+    top: 0px;
+    position: absolute;
+    right: 0px;
+}
+
+.accordion-item.accordion-item-opened{
+    background-color: #e5e5e5;
+}
+
+body {counter-reset: step;}
+#progressbar-timeline li {
+    list-style-type: none;
+    width: 23%;
+    float: left;
+    position: relative;
+    text-align: center;
+}
+#progressbar-timeline li:before {
+    content: counter(step);
+    counter-increment: step;
+    width: 40px;
+    height: 40px;
+    line-height: 36px;
+    display: block;
+    border-radius: 50%;
+    margin: 0 auto 10px auto;
+    border: 4px solid #ddd;
+    text-align: center;
+    background-color: white;
+    z-index: 99;
+    position: relative;
+
+
+}
+
+/*progressbar-timeline connectors*/
+#progressbar-timeline li:after {
+    content: '';
+    width: 100%;
+    height: 4px;
+    border-top:dashed #ddd;
+    position: absolute;
+    left: -50%;
+    top: 22px;
+    z-index: 1; /*put it behind the numbers*/
+}
+#progressbar-timeline li:first-child:after {
+    /*connector not needed before the first step*/
+    content: none;
+}
+#progressbar-timeline li.active {
+    color: green;
+}
+#progressbar-timeline li.danger {
+    color: red;
+}
+
+#progressbar-timeline li.blue {
+    color: #25a5dc;
+}
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+#progressbar-timeline li.active:before{
+    border-color: green;
+}
+
+#progressbar-timeline li.danger:before{
+    border-color: red;
+}
+
+#progressbar-timeline li.active + li:after {
+    border-top: solid green;
+}
+
+#progressbar-timeline li.blue:before {
+    border-color: #25a5dc;
+}
+
+#progressbar-timeline li.blue:after {
+    /*border-style: dashed*/;
+}
+
+#progressbar-timeline li.current:before {
+    background: rgba(242,246,248,1);
+    background: -moz-linear-gradient(left, rgba(242,246,248,1) 0%, rgba(216,225,231,1) 0%, rgba(224,239,249,1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(242,246,248,1)), color-stop(0%, rgba(216,225,231,1)), color-stop(100%, rgba(224,239,249,1)));
+    background: -webkit-linear-gradient(left, rgba(242,246,248,1) 0%, rgba(216,225,231,1) 0%, rgba(224,239,249,1) 100%);
+    background: -o-linear-gradient(left, rgba(242,246,248,1) 0%, rgba(216,225,231,1) 0%, rgba(224,239,249,1) 100%);
+    background: -ms-linear-gradient(left, rgba(242,246,248,1) 0%, rgba(216,225,231,1) 0%, rgba(224,239,249,1) 100%);
+    background: linear-gradient(to right, rgba(242,246,248,1) 0%, rgba(216,225,231,1) 0%, rgba(224,239,249,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9', GradientType=1 );
+}
+
+.grid-totals {
+    background: var(--f7-theme-color);
+    color: var(--f7-color-white);
+}
+.no-right-arrow:before{
+    content: none !important;
+}
+.custom-form-footer{
+    text-align: center !important;
+    display: block !important;
+}
+
+.audit-flag{
+    margin-bottom: 15px;
+    border-left: 6px solid orange;
+    padding-left: 10px !important;
+}
+.m-0{
+    margin:0;
+}
+
+.request-status{
+    background-color: #fff !important;
+    color: gray !important;
+    border: solid 1px gray !important;
+}
+.ellipsis-180{
+    width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

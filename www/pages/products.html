@@ -1,0 +1,187 @@
+<template>
+
+    <div class="page" data-name="products">
+
+        <div class="navbar navbar-current">
+
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a class="link icon-only panel-open" data-panel="left" href="#">
+                        <i class="icon material-icons md-only">menu</i>
+                    </a>
+                </div>
+                <div class="title sliding" >
+                    ${page_title}
+                </div>
+                <div class="right">
+                    <div class="right">
+
+                    </div>
+                </div>
+                <div class="subnavbar">
+                    <form id="products-search" class="searchbar" style="margin-bottom: 0;">
+                        <div class="searchbar-inner">
+                            <div class="searchbar-input-wrap">
+                                <input type="search" placeholder="Search" />
+                                <i class="searchbar-icon"></i>
+                                <span class="input-clear-button"></span>
+                            </div>
+                            <span class="searchbar-disable-button if-not-aurora">Cancel</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="page-content bg-pattern">
+
+            <div class="list media-list" id="productsListContainer">
+
+                <ul>
+
+                    ${products.map((product) => $h`
+
+                    <li>
+
+                        <a href="/sct-details/${product.id}/" class="item-link item-content" data-product-id="" @click=${openProduct}>
+                            <div class="item-media">
+                                <img src="${product.display_image}"
+                                     width="60" style="border-radius: 100px !important;"  @error="${errorLoadingImage}" />
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title-row list-item-no-arrow">
+                                    <div class="item-title">
+                                        <strong>${product.description}</strong>
+                                    </div>
+                                    <div class="item-after">${product.currency} ${product.price}</div>
+                                </div>
+                                <div class="item-title-row list-item-no-arrow">
+                                    <div class="item-subtitle">
+                                        <strong class="text-color-gray">${product.sku}</strong>
+                                    </div>
+                                </div>
+                                <div class="item-text">
+                                    ${product.category_name}
+                                </div>
+                            </div>
+
+                        </a>
+                    </li>
+
+                    `)}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
+
+<script>
+
+    export default (props, { $f7ready, $f7, $on, $update }) => {
+
+        const page_title = "Catalog";
+
+        let products = [1];
+
+        $f7ready(() => {
+
+            //
+
+        });
+        const errorLoadingImage = function(element) {
+
+            $$(element).attr('src','static/icons/no-image.png');
+
+        };
+
+        const setUpProductsSearch = function() {
+
+            //console.log("SETTING UP SEARCH ...");
+
+            // create searchbar
+            searchbar = $f7.searchbar.create({
+                el: '#products-search',
+                searchContainer: '#productsListContainer',
+                searchIn: '.item-title,.item-subtitle',
+                on: {
+                    search(sb, query, previousQuery) {
+                        console.log(query, previousQuery);
+                    }
+                }
+            });
+
+        };
+
+        const openProduct = function(product) {
+
+            console.log("OPEN PRODUCT", product);
+
+            //TODO pass the parameters
+
+            //MainApp.views.main.router.navigate('/notification-details/');
+
+            let sku = 100;
+
+            MainApp.views.current.router.navigate('/sct-details/${sku}/', {
+                reloadCurrent: true,
+                ignoreCache: true,
+            });
+
+        };
+
+        $on('pageInit', () => {
+
+
+
+            $f7.request.get('https://commercial.hyperefficient2.net/app/get_all_products_json?bypass=1').then((res) => {
+                // update user with new data
+                products = JSON.parse(res.data);
+
+                setUpProductsSearch();
+
+                // trigger re-render
+                $update();
+            }).catch(function (err) {
+                console.log("HTTP ERROR");
+                console.log(err.xhr);
+                console.log(err.status);
+                console.log(err.message);
+                MainAppErrors.error_http(err);
+            });
+
+        });
+
+        $on('pageMounted', (e, page) => {
+            console.log('page_title:', page_title, 'page mounted');
+        });
+        $on('pageBeforeIn', (e, page) => {
+            console.log('page_title:', page_title, 'page before in');
+        });
+        $on('pageAfterIn', (e, page) => {
+            console.log('page_title:', page_title, 'page after in');
+        });
+        $on('pageBeforeOut', (e, page) => {
+            console.log('page_title:', page_title, 'page before out');
+        });
+        $on('pageAfterOut', (e, page) => {
+            console.log('page_title:', page_title, 'page after out');
+        });
+        $on('pageBeforeUnmount', (e, page) => {
+            console.log('page_title:', page_title, 'page before unmount');
+        });
+        $on('pageBeforeRemove', (e, page) => {
+            console.log('page_title:', page_title, 'page before remove');
+        });
+
+        return $render;
+
+    }
+
+</script>

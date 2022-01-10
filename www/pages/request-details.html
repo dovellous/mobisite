@@ -1,0 +1,490 @@
+<template>
+    <div class="page" data-name="requests">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <!-- back button text will be visible only in iOS and Aurora themes -->
+                        <span class="if-not-md">Back</span>
+                    </a>
+                </div>
+                <div class="title sliding" >
+                    ${page_title}
+                </div>
+                <div class="right">
+                    <div class="right">
+                        <!--<a class="link icon-only requisition-view-messages" href="#" >
+                            <i class="icon material-icons md-only">question_answer</i>
+                        </a>-->
+
+                        <a class="link icon-only sheet-open open-approver-actions" style="display: none;" data-sheet=".my-sheet-approve-decline" href="#" >
+                            <i class="icon material-icons md-only">done</i>
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="fab-backdrop"></div>
+        <div class="fab fab-right-bottom requisition-view-messages">
+            <a href="#">
+                <i class="icon material-icons md-only">message</i>
+                <i class="icon material-icons md-only">message</i>
+            </a>
+        </div>
+        <div class="page-content bg-pattern">
+
+            <div class="block no-padding">
+
+                <div class="card">
+                    <div class="card-header"><strong>Requisition Process</strong></div>
+                    <div class="card-content">
+                        <div class="row">
+                            <ul id="progressbar-timeline" class="progressbar-timeline" style="width:100%;"></ul>
+                            <div class="skeleton-text skeleton-effect-wave padding">
+                                <p>Loading progress bar...............</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><strong>Requisition Details</strong></div>
+
+
+
+                    <div class="card-content">
+                        <!-- Card content -->
+
+                        <div class="list">
+
+                            <ul>
+
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons">person_circle</i></div>
+                                        <div class="item-inner no-right-arrow">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Requester</strong></div>
+                                                <span id="spn-requester" class="skeleton-text skeleton-effect-wave">Requester name</span>
+                                            </div>
+                                            <!--
+                                            <div class="item-after">Edit</div>
+                                            -->
+                                        </div>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons">number_square</i></div>
+                                        <div class="item-inner no-right-arrow">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Requisition No.</strong></div>
+                                                <span id="spn-request-number" class="skeleton-text skeleton-effect-wave ">Requisition No.</span>
+                                            </div>
+                                            <!--
+                                            <div class="item-after">Edit</div>
+                                            -->
+                                        </div>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons">calendar_today</i></div>
+                                        <div class="item-inner no-right-arrow">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Date</strong></div>
+                                                <span id="spn-date" class="skeleton-text skeleton-effect-wave ">Date</span>
+                                            </div>
+                                            <!--
+                                            <div class="item-after">Edit</div>
+                                            -->
+                                        </div>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons">money_dollar_circle</i></div>
+                                        <div class="item-inner no-right-arrow">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Currency</strong></div>
+                                                <span id="spn-request-currency" class="skeleton-text skeleton-effect-wave">Currency</span>
+                                            </div>
+                                            <!--
+                                            <div class="item-after">Edit</div>
+                                            -->
+                                        </div>
+                                    </a>
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+
+            </div>
+
+            <div class="block no-padding">
+
+                <div class="card">
+                    <div class="card-header"><strong>Items</strong></div>
+                    <div class="card-content">
+                        <!-- Card content -->
+
+                        <div class="list">
+                            <ul>
+
+                                ${requisition_items.map((requisition_item, index) => $h`
+
+                                <li class="accordion-item">
+                                    <a class="item-content item-link" href="#">
+                                        <div class="item-inner">
+                                            <div class="item-title">${requisition_item.product_description}</div>
+                                            <div class="item-after"><strong>$</strong><strong>${ parseFloat(requisition_item.price * requisition_item.quantity).toFixed(2) }</strong></div>
+                                        </div>
+                                    </a>
+                                    <div class="accordion-item-content">
+                                        <div class="block">
+                                            <p><strong>SKU:</strong> ${requisition_item._product_sku}
+                                            <br /><strong>Unit Price:</strong> <span>$</span>${parseFloat(requisition_item.price).toFixed(2)}
+                                            <br /><strong>Quantity:</strong> ${requisition_item.quantity}</p>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                `)}
+
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <div class="card-footer no-padding ">
+                        <div class="list" style="width: 100%;">
+                            <ul>
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-inner">
+                                            <div class="item-title"><strong>Sub Total</strong></div>
+                                            <div class="item-after" style="margin-right: 28px;"><strong>$<span id="spn-sub-total"></span></strong></div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-inner">
+                                            <div class="item-title"><strong>VAT</strong></div>
+                                            <div class="item-after" style="margin-right: 28px;"><strong>$<span id="spn-vat"></span> </strong></div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="item-content">
+                                        <div class="item-inner">
+                                            <div class="item-title"><strong>Grand Total</strong></div>
+                                            <div class="item-after" style="margin-right: 28px;"><strong>$<span id="spn-grand-total"></span></strong></div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="block no-padding">
+                <div class="card">
+                    <div class="card-header"><strong>Attachments</strong></div>
+                    <div class="card-content">
+                        <div class="list">
+                            <ul>
+
+                                <li>
+                                    <a href="#" target="_blank" id="requisition-file" class="item-link item-content external">
+                                        <div class="item-inner no-right-arrow">
+                                            <div class="item-title">
+
+                                                <div class="item-header button button-outline" style="text-transform: inherit;">
+                                                    <i class="icon f7-icons" style="font-size: 15px;">paperclip</i>
+                                                    <strong>REQUISITION</strong>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </a>
+                                </li>
+
+                                ${attachments.map((attachment, index) => $h`
+                                <li>
+                                    <a href="${attachment.url}" target="_blank"  class="item-link item-content external">
+                                        <div class="item-inner no-right-arrow">
+                                            <div class="item-title">
+
+                                                <div class="item-header button button-outline" style="text-transform: inherit;">
+                                                    <i class="icon f7-icons" style="font-size: 15px;">paperclip</i>
+                                                    <strong>${attachment.attachment}</strong>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </a>
+                                </li>
+                                `)}
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="sheet-modal my-sheet-approve-decline">
+                <div class="toolbar">
+                    <div class="toolbar-inner">
+                        <div class="left">
+                            <a class="link sheet-close approve-request" href="#">
+                                <i class="icon f7-icons">checkmark_alt</i> APPROVE
+                            </a>
+                        </div>
+                        <div class="right">
+                            <a class="link sheet-close decline-request" href="#">
+                                <i class="icon f7-icons">multiply</i> DENY
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sheet-modal-inner">
+                    <div class="list">
+                        <div class="block" style="margin-top:0px">
+                            <textarea width="100%" id="txt-notes" placeholder="Notes"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</template>
+
+<script>
+    let selected_request_id;
+    let selected_quote_id;
+
+    export default (props, { $f7route, $f7ready, $f7, $on, $update }) => {
+
+        let page_title = "My Requests";
+        let request_number = "";
+
+        let _current_url = $f7route.url; //page-loader-component/vladimir/123/about-me/1/?start=0&end=30#top
+        let _current_path = $f7route.path; //page-loader-component/vladimir/123/about-me/1/
+        let _current_params = $f7route.params; //{"user":"vladimir","userId":"123","posts":"about-me","postId":"1"}
+        let _current_hash = $f7route.hash; //top
+        let _currentquery = $f7route.query; //{"start":"0","end":"30"}
+
+        let requisition_items = [];
+        let attachments = []
+
+        $f7ready(() => {
+
+            //
+
+        });
+
+
+
+        const errorLoadingImage = function(element) {
+
+            $$(element).attr('src','static/icons/no-image.png');
+
+
+        };
+
+        const renderDetails = function( _current_params, request) {
+
+            //console.log("FOUND REQUISITION", _current_params, request);
+            let request_id = _current_params.request_id;
+            selected_request_id = request_id;
+            $$(".skeleton-text").show();
+            $f7.request.get('https://commercial.hyperefficient2.net/app/get_quote/0/' + request_id + '/' + window.localStorage.getItem('userId') ).then((res) => {
+                var quote =  JSON.parse( res.data );
+                quote = quote.quote;
+                try{
+                    $$("#spn-requester").removeClass("skeleton-text skeleton-effect-wave");
+                    $$("#spn-request-currency").removeClass("skeleton-text skeleton-effect-wave");
+                    $$("#spn-requester").html(quote.buyer.full_name);
+                    $$("#spn-request-currency").html(quote.rfq.currency);
+                    selected_quote_id = quote.all_quotations[0].id;
+                }catch(ex){}
+                let userData = JSON.parse( window.localStorage.getItem('userData') );
+                let attachUrl = "https://commercial.hyperefficient2.net/Export/printRequisition/"+quote.rfq.id+"/"+quote.all_quotations[0].supplier_id +"/"+ quote.all_quotations[0].supplier.company_id + "/" +quote.rfq.rfq_number;
+                attachUrl+= "?mobile_company_id=" + userData.response.user_data.company_id;
+                $$("#requisition-file").attr("href",attachUrl);
+
+                $$("#spn-request-number").removeClass("skeleton-text skeleton-effect-wave");
+                $$("#spn-date").removeClass("skeleton-text skeleton-effect-wave");
+
+                $$("#spn-request-number").html(quote.rfq.rfq_number);
+                $$("#spn-date").html(quote.all_quotations[0].date);
+
+                $$("#spn-sub-total").html( parseFloat(quote.total).toFixed(2) );
+
+                $$("#spn-grand-total").html( (parseFloat(quote.total) + parseFloat(quote.vat)  )  .toFixed(2) );
+
+                $$("#spn-vat").html( parseFloat(quote.vat).toFixed(2) );
+
+
+                $$(".open-approver-actions").hide();
+                if( !quote.quote_approved  ){//&& parseInt(quote.id) > 0
+                    if( parseInt(quote.current_approver) === parseInt(window.localStorage.getItem('userId')) ){
+                        $$(".open-approver-actions").show();
+                    }
+                }
+
+                let _items = quote.line_items;
+
+                requisition_items = Object.keys(_items).map((key) => _items[key]);
+
+                let _attachments = JSON.parse( res.data ).attachments;
+                attachments = Object.keys(_attachments).map((key) => _attachments[key]);
+
+                //console.log(res.data);
+
+                let approvers = JSON.parse( res.data ).timeline_points;
+                var html = '';
+                for( let i =0; i < approvers.length; i++){
+                    let approver = approvers[i];
+                    html+= '<li width="' + approver.width +'%" class="' + approver.class + '">' + approver.name + '</li>';
+                }
+                $$(".skeleton-text").hide();
+                $$("#progressbar-timeline").html(html);
+
+                // trigger re-render
+                $update();
+            })
+
+
+
+
+        };
+
+        $on('pageInit', () => {
+
+            console.log('page_title:', page_title, 'page init');
+
+            console.log("LOAD REQUEST", _current_params.request_number);
+
+            page_title = _current_params.request_number;
+
+            renderDetails(_current_params, window.RequesitionsMINE[_current_params.request_index]);
+
+
+            $$(".requisition-view-messages").click(()=>{
+
+                let _url = `/notification-details/${_current_params.request_number}/`;
+
+                console.log("GOTO:", _url);
+
+                MainApp.views.main.router.navigate(_url, {
+                    reloadCurrent: false,
+                    ignoreCache: true,
+                });
+
+            });
+
+            $$(".approve-request").click(()=>{
+                MainApp.preloader.show();
+                MainApp.sheet.close(".my-sheet-approve-decline");
+                app.request.post('https://commercial.hyperefficient2.net/app/update_quote_status',
+                    { quote_id:selected_quote_id,
+                        status: 'APPROVED',
+                        notes:$$("#txt-notes").val(),
+                        user_id:window.localStorage.getItem('userId'),
+                        is_automatic:1})
+                    .then(function (res) {
+                        refreshCounters();
+                        app.toast.show(
+                            {text:"Request has been approved",
+                                position:'bottom',
+                                closeTimeout: 3000}
+                        );
+
+                        MainApp.views.main.router.navigate('/my-requests/approve/', {
+                            reloadCurrent: false,
+                            ignoreCache: true,
+                        });
+
+
+                    });
+
+
+            });
+
+            $$(".decline-request").click(()=>{
+                MainApp.preloader.show();
+                MainApp.sheet.close(".my-sheet-approve-decline");
+                app.request.post('https://commercial.hyperefficient2.net/app/update_quote_status',
+                    { quote_id:selected_quote_id,
+                        status: 'APPROVED',
+                        notes:$$("#txt-notes").val(),
+                        user_id:window.localStorage.getItem('userId'),
+                        is_automatic:1})
+                    .then(function (res) {
+                        app.toast.show(
+                            {text:"Request has been declined",
+                                position:'bottom',
+                                closeTimeout: 3000}
+                        );
+                        MainApp.views.main.router.navigate('/my-requests/approve/', {
+                            reloadCurrent: false,
+                            ignoreCache: true,
+                        });
+
+
+                    });
+
+            });
+
+        });
+
+        $on('pageMounted', (e, page) => {
+            //console.log('page_title:', page_title, 'page mounted');
+        });
+        $on('pageBeforeIn', (e, page) => {
+            //console.log('page_title:', page_title, 'page before in');
+        });
+        $on('pageAfterIn', (e, page) => {
+            //console.log('page_title:', page_title, 'page after in');
+        });
+        $on('pageBeforeOut', (e, page) => {
+            //console.log('page_title:', page_title, 'page before out');
+        });
+        $on('pageAfterOut', (e, page) => {
+            //console.log('page_title:', page_title, 'page after out');
+        });
+        $on('pageBeforeUnmount', (e, page) => {
+            //console.log('page_title:', page_title, 'page before unmount');
+        });
+        $on('pageBeforeRemove', (e, page) => {
+            //console.log('page_title:', page_title, 'page before remove');
+        });
+
+        return $render;
+
+    }
+
+</script>

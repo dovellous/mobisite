@@ -1,0 +1,440 @@
+<template>
+    <div class="page" data-name="requests">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <!-- back button text will be visible only in iOS and Aurora themes -->
+                        <span class="if-not-md">Back</span>
+                    </a>
+                </div>
+                <div class="title sliding" >
+                    ${page_title}
+                </div>
+                <div class="right">
+                    <div class="right">
+                        <a class="link icon-only sheet-open approve-tick" style="display: none;" href="#" data-sheet=".my-sheet-approve-decline" >
+                            <i class="icon material-icons md-only">done</i>
+                        </a>
+                    </div>
+                </div>
+                <div class="subnavbar">
+                    <form id="requests-search" class="searchbar" style="margin-bottom: 0;">
+                        <div class="searchbar-inner">
+                            <div class="searchbar-input-wrap">
+                                <input type="search" placeholder="Search" />
+                                <i class="searchbar-icon"></i>
+                                <span class="input-clear-button"></span>
+                            </div>
+                            <span class="searchbar-disable-button if-not-aurora">Cancel</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="fab-backdrop"></div>
+        <div class="fab fab-right-bottom">
+            <a href="/notifications/">
+                <i class="icon material-icons md-only">message</i>
+                <i class="icon material-icons md-only">message</i>
+            </a>
+        </div>
+        <div class="page-content ptr-content bg-pattern" @ptr:refresh=${refreshList}>
+
+            <div class="searchbar-backdrop"></div>
+
+            <div class="list media-list searchbar-found" id="requestsListContainer">
+                
+                <div id="placeholder-request-list" class="list media-list skeleton-text skeleton-effect-wave">
+                    <ul >
+    
+                        ${[1,2,3,4,5,6,7].map((item, index) => $h`
+    
+    
+                        <li>
+        
+                            <div class="item-link item-content " >
+                                <div class="item-inner my-request-item"  >
+                                    <div class="item-title-row">
+                                        <div class="item-title" style="height:15px; width: 40%;">
+                                                <div class="skeleton-block" style="width: 100%"></div>
+                                        </div>
+                                        <div class="item-after" style="height:15px; width: 18%;">
+                                            <div class="skeleton-block" style="width: 100%; margin-top: -2px;" ></div>
+                                        </div>
+                                    </div>
+                                    <div class="item-subtitle">
+                                        <div class="skeleton-block" style="width: 50%; margin-top: 7px; opacity: 0.6;"></div>
+                                    </div>
+                                    <div class="item-text">
+                                        <div class="skeleton-block" style="width: 25%; margin-top: 5px; opacity: 0.6;"></div>
+                                    </div>
+                                </div>
+        
+                            </div>
+                        </li>
+    
+                        `)}
+                        
+                    </ul>
+                </div>
+
+                <ul id="fetched-request-list" style="display:none">
+
+                    ${requisitions.map((request, index) => $h`
+
+                    <li>
+
+                        <div class="item-link item-content ${request.audit_class}" >
+                            <div class="item-media chk-approve-container" style="display: none;max-width: 30px; min-width: 30px">
+                                <label class="item-checkbox item-content" style="margin-left: -10px;">
+                                    <input type="checkbox" class="chk-approve" data-id="${request.approved_quote}" />
+                                    <i class="icon icon-checkbox"></i>
+                                </label>
+                            </div>
+                            <div class="item-inner my-request-item" data-request-index="${index}"  data-request-number="${request.rfq_number}" data-request-id="${request.quote_id}" >
+                                <div class="item-title-row list-item-no-arrow">
+                                    <div class="item-title">
+                                        <strong>${request.rfq_number}</strong>
+                                    </div>
+                                    <div class="item-after"><strong>${request.currency} ${parseFloat(request.inquiry_value).toFixed(2) }</strong></div>
+                                </div>
+                                <div class="item-title-row list-item-no-arrow">
+                                    <div class="item-subtitle ellipsis-180">
+                                        <strong class="text-color-gray">${request.rfq_name}</strong>
+                                    </div>
+                                    <div class="item-after">
+                                        <a class="link popover-open request-chevron" href="#" data-popover=".popover-links">
+                                            <i class="f7-icons text-color-gray reset-position" >chevron_right</i>
+                                        </a>
+
+                                    </div>
+                                </div>
+                                <div class="item-text">
+                                    ${request.date}
+                                    <div class="item-after" style="float:right">
+                                        <span class="badge request-status">
+                                            ${request.status_text}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+
+                    `)}
+
+                </ul>
+
+            </div>
+
+            <div class="block searchbar-not-found">
+                <div class="block-inner">Nothing found</div>
+            </div>
+
+            <div class="sheet-modal my-sheet-approve-decline">
+                <div class="toolbar">
+                    <div class="toolbar-inner">
+                        <div class="left">
+                            <a class="link sheet-close approve-request" href="#">
+                                <i class="icon f7-icons">checkmark_alt</i> APPROVE
+                            </a>
+                        </div>
+                        <div class="right">
+                            <a class="link sheet-close decline-request" href="#">
+                                <i class="icon f7-icons">multiply</i> DENY
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sheet-modal-inner">
+                    <div class="list">
+                        <div class="block" style="margin-top:0px">
+                            <textarea width="100%" id="txt-notes" placeholder="Notes"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
+
+<script>
+
+    export default (props, { $f7route, $f7ready, $f7, $on, $update }) => {
+
+        let _current_params = $f7route.params;
+
+        let page_title = "My Requests";
+        if(_current_params.which === "approve")
+            page_title = "Requests to Approve";
+
+        if(_current_params.which === "approved")
+            page_title = "Approved/Denied By Me";
+
+        let requisitions = [];
+
+        let searchbar = null;
+
+        let current_requisition = [];
+
+        let requisitions_list_view_popup = null;
+
+        $f7ready(() => {
+
+            //
+
+        });
+
+        const errorLoadingImage = function(element) {
+
+            $$(element).attr('src','static/icons/no-image.png');
+
+        };
+
+
+        const openRequest = function(rfq_number) {
+
+            console.log("OPEN REQUEST", rfq_number);
+
+            window.OpenedRequest = $$(this);
+
+            //TODO pass the parameters
+
+            let id = 100;
+
+            MainApp.views.current.router.navigate('/request-details/${id}/', {
+                reloadCurrent: false,
+                ignoreCache: true,
+            });
+
+        };
+
+        const setUpSearch = function() {
+
+            //console.log("SETTING UP SEARCH ...");
+
+            // create searchbar
+            searchbar = $f7.searchbar.create({
+                el: '#requests-search',
+                searchContainer: '#requestsListContainer',
+                searchIn: '.item-title,.item-subtitle',
+                on: {
+                    search(sb, query, previousQuery) {
+                        console.log(query, previousQuery);
+                    }
+                }
+            });
+
+        };
+
+        const renderList = function(_result) {
+
+            //console.log("RENDER LIST WITH:", _result);
+
+            if(typeof _result !== "undefined") {
+
+                let _quotes = _result.quotes;
+
+                requisitions = Object.keys(_quotes).map((key) => _quotes[key]);
+
+                window.RequesitionsMINE = requisitions;
+
+                console.log("FINAL REQUESTS:", requisitions);
+
+                $$(".item-inner.my-request-item").click(function(){
+
+                    let _index = $$(this).attr("data-request-index");
+
+                    let _id = $$(this).attr("data-request-id");
+
+                    let _number = $$(this).attr("data-request-number");
+
+                    current_requisition = [_index, _id, _number];
+
+                    let _url = `/request-details/${current_requisition[0]}/${current_requisition[1]}/${current_requisition[2]}/`;
+
+                    console.log("GOTO:", _url, current_requisition);
+
+                    MainApp.views.main.router.navigate(_url, {
+                        reloadCurrent: false,
+                        ignoreCache: true,
+                    });
+
+                });
+
+                // trigger re-render
+                $update();
+
+                $$("#fetched-request-list").show();
+                $$("#placeholder-request-list").hide();
+
+            }
+
+            if(page_title === "My Requests"){
+                $$(".request-chevron").hide();
+                $$(".request-status").show();
+            }else{
+                $$(".request-chevron").show();
+                $$(".request-status").hide();
+            }
+        };
+
+        const refreshList = function(e, done) {
+
+            MainAppStorage.storejs.getKey("get_all_requests_json", function (_result) {
+
+                    console.log("LOAD REQUEST LOCAL:", _result);
+
+                    renderList(_result);
+
+                },
+                function (error) {
+
+                    console.log("LOAD REQUEST LOCAL NOT FOUND:", error);
+
+                });
+
+            $$("#fetched-request-list").hide();
+            $$("#placeholder-request-list").show();
+            MainApp.preloader.show();
+
+            let url = 'https://commercial.hyperefficient2.net/app/get_all_requests_json/';
+            if(_current_params.which === "approve")
+                url = 'https://commercial.hyperefficient2.net/app/get_quotes_to_approve/';
+            if(_current_params.which === "approved")
+                url = 'https://commercial.hyperefficient2.net/app/get_quotes_approved/';
+
+            $f7.request.get( url + window.localStorage.getItem('userId') ).then((res) => {
+                // update user with new data
+                let _result = JSON.parse(res.data);
+
+                console.log("REMOTE REQUEST RESULT:", _result);
+
+                MainAppStorage.storejs.setKey("get_all_requests_json",_result, function () {
+
+                        console.log("SAVE REQUEST LOCAL:", _result);
+
+                    },
+                    function () {
+
+                        console.log("SET LOCAL REQUEST ERROR:", error);
+
+                    });
+
+                renderList(_result);
+
+                if(_current_params.which === "approve"){
+                    $$(".approve-tick").show();
+                    $$(".chk-approve-container").show();
+                }
+
+                MainApp.preloader.hide();
+
+                $update();
+                $$("#requestsListContainer .chk-approve").each(function(){
+                    if( $$(this).is(":checked") ){
+                        $$(this).prop("checked", false);
+                    }
+                })
+
+            }).catch(function (err) {
+                console.log("HTTP ERROR");
+                console.log(err.xhr);
+                console.log(err.status);
+                console.log(err.message);
+                MainAppErrors.error_http(err);
+            });
+
+        };
+
+        const doBulk  = function(status){
+            var items = [];
+            $$("#requestsListContainer .chk-approve").each(function(){
+                if( $$(this).is(":checked") ){
+                    items.push( $$(this).attr("data-id") )
+                }
+            })
+            if( items.length !== 0 ){
+
+                var itemStr = JSON.stringify(items);
+                console.log(itemStr);
+
+                MainApp.preloader.show();
+                app.request.post('https://commercial.hyperefficient2.net/app/bulk_approve/' + status,
+                    { items:itemStr,
+                        user_id:window.localStorage.getItem('userId'),
+                        is_automatic:1})
+                    .then(function (res) {
+                        refreshCounters();
+                        app.toast.show(
+                            {text:"Requests have been " + status,
+                                position:'bottom',
+                                closeTimeout: 3000}
+                        );
+                        MainApp.preloader.hide();
+                        MainApp.views.main.router.navigate('/', {
+                            reloadCurrent: false,
+                            ignoreCache: true,
+                        });
+
+
+                    });
+            }
+        }
+        $on('pageInit', () => {
+
+            refreshList();
+
+            setUpSearch();
+
+            $$(".refresh-my-requests-list").click(()=>{
+
+                refreshList();
+
+            });
+
+            $$(".approve-request").click(()=>{
+                doBulk("APPROVED");
+            });
+            $$(".decline-request").click(()=>{
+                doBulk("DECLINED");
+            });
+
+
+
+        });
+
+        $on('pageMounted', (e, page) => {
+            console.log('page_title:', page_title, 'page mounted');
+        });
+        $on('pageBeforeIn', (e, page) => {
+            console.log('page_title:', page_title, 'page before in');
+        });
+        $on('pageAfterIn', (e, page) => {
+            console.log('page_title:', page_title, 'page after in');
+        });
+        $on('pageBeforeOut', (e, page) => {
+            console.log('page_title:', page_title, 'page before out');
+        });
+        $on('pageAfterOut', (e, page) => {
+            console.log('page_title:', page_title, 'page after out');
+        });
+        $on('pageBeforeUnmount', (e, page) => {
+            console.log('page_title:', page_title, 'page before unmount');
+        });
+        $on('pageBeforeRemove', (e, page) => {
+            console.log('page_title:', page_title, 'page before remove');
+        });
+
+        return $render;
+
+    }
+
+</script>

@@ -1,0 +1,319 @@
+<template>
+
+    <div class="page" data-name="messages">
+
+        <div class="navbar navbar-current">
+
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a class="link back app-pages-messenger-chats-btn-back" href="#">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                    </a>
+                </div>
+                <div class="title sliding" >
+                    ${page_title}
+                </div>
+                <div class="right">
+                    <div class="right">
+
+                    </div>
+                </div>
+                <div class="subnavbar">
+                    <form id="notifications-search" class="searchbar" style="margin-bottom: 0;">
+                        <div class="searchbar-inner">
+                            <div class="searchbar-input-wrap">
+                                <input type="search" placeholder="Search" />
+                                <i class="searchbar-icon"></i>
+                                <span class="input-clear-button"></span>
+                            </div>
+                            <span class="searchbar-disable-button if-not-aurora">Cancel</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="page-content bg-pattern">
+            <div class="searchbar-backdrop"></div>
+            <div class="list media-list searchbar-found" id="messagesListContainer">
+
+                <div id="placeholder-messages-list" class="list media-list skeleton-text skeleton-effect-wave">
+                    <ul >
+
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title-row m-0" >
+                                    <div class="item-title m-0" >Title</div>
+                                    <div class="item-after">
+                                        <span>USD 30</span>
+                                    </div>
+                                </div>
+                                <div class="item-title-row">
+                                    <div class="item-subtitle m-0" >Title</div>
+                                    <div class="item-after"><span>AB</span></div>
+                                </div>
+
+
+                            </div>
+                        </li>
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title-row m-0" >
+                                    <div class="item-title m-0" >Title</div>
+                                    <div class="item-after">
+                                        <span>USD 30</span>
+                                    </div>
+                                </div>
+                                <div class="item-title-row">
+                                    <div class="item-subtitle m-0" >Title</div>
+                                    <div class="item-after"><span>AB</span></div>
+                                </div>
+
+                            </div>
+                        </li>
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title-row m-0" >
+                                    <div class="item-title m-0" >Title</div>
+                                    <div class="item-after">
+                                        <span>USD 30</span>
+                                    </div>
+                                </div>
+                                <div class="item-title-row">
+                                    <div class="item-subtitle m-0" >Title</div>
+                                    <div class="item-after"><span>AB</span></div>
+                                </div>
+
+
+                            </div>
+                        </li>
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title-row m-0" >
+                                    <div class="item-title m-0" >Title</div>
+                                    <div class="item-after">
+                                        <span>USD 30</span>
+                                    </div>
+                                </div>
+                                <div class="item-title-row">
+                                    <div class="item-subtitle m-0" >Title</div>
+                                    <div class="item-after"><span>AB</span></div>
+                                </div>
+
+
+                            </div>
+                        </li>
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title-row m-0" >
+                                    <div class="item-title m-0" >Title</div>
+                                    <div class="item-after">
+                                        <span>USD 30</span>
+                                    </div>
+                                </div>
+                                <div class="item-title-row">
+                                    <div class="item-subtitle m-0" >Title</div>
+                                    <div class="item-after"><span>AB</span></div>
+                                </div>
+
+
+                            </div>
+                        </li>
+                        <li class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title-row m-0" >
+                                    <div class="item-title m-0" >Title</div>
+                                    <div class="item-after">
+                                        <span>USD 30</span>
+                                    </div>
+                                </div>
+                                <div class="item-title-row">
+                                    <div class="item-subtitle m-0" >Title</div>
+                                    <div class="item-after"><span>AB</span></div>
+                                </div>
+
+
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <ul id="fetched-messages-list">
+
+                    ${messages.map((message) => $h`
+
+                    <li>
+
+                        <a href="/notification-details/${message.quote_id}/" class="item-link item-content sz-message" data-message-id="${message.quote_id}" >
+                            <div class="item-media">
+                                <img src="https://ui-avatars.com/api/?font-size=0.33&background=000099&color=fff&name=${message.buyer}"
+                                     width="60" style="border-radius: 100px !important;"/>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title-row list-item-no-arrow">
+                                    <div class="item-title">
+                                        <strong>${message.quote_id}</strong>
+                                    </div>
+                                    <div class="item-after">${message.date}</div>
+                                </div>
+                                <div class="item-title-row list-item-no-arrow">
+                                    <div class="item-subtitle">
+                                        <strong class="text-color-gray">${message.rfq_name}</strong>
+                                    </div>
+                                    <div class="item-after">
+                                        <span class="badge color-green ${message.cnt_class}">${message.cnt}</span>
+                                    </div>
+                                </div>
+                                <div class="item-text">
+                                    ${message.message}
+                                </div>
+                            </div>
+
+                        </a>
+                    </li>
+
+                    `)}
+
+                </ul>
+
+            </div>
+
+            <div class="block searchbar-not-found">
+                <div class="block-inner">Nothing found</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
+
+<script>
+
+    export default (props, { $f7route, $f7ready, $f7, $on, $update }) => {
+
+        const page_title = "Messages";
+
+        let messages = [];
+
+        let searchbar = null;
+        $f7ready(() => {
+
+            //
+
+        });
+
+        const openMessage = function(message) {
+
+            console.log("OPEN MESSAGE", message);
+
+            //TODO pass the parameters
+
+            //MainApp.views.main.router.navigate('/notification-details/');
+
+
+            let messageId = 100;
+
+            MainApp.views.current.router.navigate('/notification-details/${message.quote_id}', {
+                reloadCurrent: true,
+                ignoreCache: true,
+            });
+
+        };
+
+        const setUpSearchNotifications = function() {
+
+
+            // create searchbar
+            searchbar = $f7.searchbar.create({
+                el: '#notifications-search',
+                searchContainer: '#messagesListContainer',
+                searchIn: '.item-title,.item-subtitle',
+                on: {
+                    search(sb, query, previousQuery) {
+                        console.log(query, previousQuery);
+                    }
+                }
+            });
+
+        };
+
+        $on('pageInit', () => {
+            $$("#fetched-messages-list").hide();
+            $$("#placeholder-messages-list").show();
+            $f7.request.get('https://commercial.hyperefficient2.net/app/get_user_messages/' + window.localStorage.getItem('userId') ).then((res) => {
+                var _messages =  JSON.parse( res.data );
+
+                messages = Object.keys(_messages).map((key) => _messages[key]);
+
+                $$(".item-link.item-content.sz-message").click(function(){
+
+
+                    let _id = $$(this).attr("data-message-id");
+
+
+                    let _url = `/notification-details/${_id}/`;
+
+
+                    MainApp.views.current.router.navigate(_url, {
+                        reloadCurrent: false,
+                        ignoreCache: true,
+                    });
+
+                });
+
+
+                // trigger re-render
+                $update();
+                $$("#fetched-messages-list").show();
+                $$("#placeholder-messages-list").hide();
+
+            })
+            $f7.request.get('https://commercial.hyperefficient2.net/app/get_unread_messages/' + window.localStorage.getItem('userId') ).then((res) => {
+                var result =  JSON.parse( res.data );
+
+                if( parseInt( result.count ) > 0 ){
+                    $$("#badge-counter-messages-3").show();
+                    $$("#badge-counter-messages-3").html(result.count);
+                }
+
+                // trigger re-render
+                $update();
+
+            })
+
+
+
+            setUpSearchNotifications();
+
+        });
+
+        $on('pageMounted', (e, page) => {
+            console.log('page_title:', page_title, 'page mounted');
+        });
+        $on('pageBeforeIn', (e, page) => {
+            console.log('page_title:', page_title, 'page before in');
+        });
+        $on('pageAfterIn', (e, page) => {
+            console.log('page_title:', page_title, 'page after in');
+        });
+        $on('pageBeforeOut', (e, page) => {
+            console.log('page_title:', page_title, 'page before out');
+        });
+        $on('pageAfterOut', (e, page) => {
+            console.log('page_title:', page_title, 'page after out');
+        });
+        $on('pageBeforeUnmount', (e, page) => {
+            console.log('page_title:', page_title, 'page before unmount');
+        });
+        $on('pageBeforeRemove', (e, page) => {
+            console.log('page_title:', page_title, 'page before remove');
+        });
+
+        return $render;
+
+    }
+
+</script>

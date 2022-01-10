@@ -1,0 +1,294 @@
+<template>
+
+    <div class="page" data-name="home">
+
+        <div class="navbar navbar-current">
+
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a class="link icon-only panel-open" data-panel="left" href="#">
+                        <i class="icon material-icons md-only">menu</i>
+                    </a>
+                </div>
+                <div class="title sliding" style="text-align: center;">
+                    <img src="static/images/logo.png" style="width: 33px; vertical-align: text-top;"/> Supply Zone
+                </div>
+                <div class="right">
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="page-content bg-pattern">
+
+            <div class="block home-cards-container">
+
+                <div class="row" style="width: 100%;">
+                    <div class="col-50">
+                        <div class="card card-content-padding home-cards ripple" data-url="/my-requests/approve/"
+                             style="text-align: center;" data-count="${countToApprove}"
+                             data-error="There are no requests to approve">
+
+                            <h1 style="font-size: 64px; font-weight: 400; margin: 0;" id="to-approve-cnt">${countToApprove}</h1>
+
+                            <span class="home-tiles-text">To Approve <br /> <span style="color:#fff">..</span> </span>
+
+                        </div>
+                    </div>
+                    <div class="col-50">
+                        <div class="card card-content-padding home-cards ripple" data-url="/"
+                             style="text-align: center;" data-count="${countRequestsToWatch}"
+                             data-error="There are no requests to watch">
+
+                            <h1 style="font-size: 64px; font-weight: 400; margin: 0;">${countRequestsToWatch}</h1>
+
+                            <span class="home-tiles-text">Requests <br />To Watch</span>
+
+                        </div>
+                    </div>
+                    <div class="col-50">
+                        <div class="card card-content-padding home-cards ripple" data-url="/my-requests/mine/"
+                             style="text-align: center;" data-count="${countMyRequests}"
+                             data-error="There are no requests to view at this time">
+
+                            <h1 style="font-size: 64px; font-weight: 400; margin: 0;" >${countMyRequests}</h1>
+
+                            <span class="home-tiles-text">My Requests <br /> <span style="color:#fff">..</span> </span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-50">
+                        <div class="card card-content-padding home-cards ripple"
+                             data-url="/my-requests/approved/" style="text-align: center;"
+                             data-count="${countApprovedDeniedByMe}"
+                             data-error="There are no requests to view at this time">
+
+                            <h1 style="font-size: 64px; font-weight: 400; margin: 0;" id="approved-cnt">${countApprovedDeniedByMe}</h1>
+
+                            <span class="home-tiles-text">Approved/Denied By Me</span>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="block block-strong" id="home-biometric-notification">
+                <div class="row">
+                    <div class="col-25">
+                        <img src="static/icons/biometric.jpg" style="width: 100%;"/>
+                    </div>
+                    <div class="col-75">
+                        <span class=""><strong>Biometric device detected!</strong></span><br />
+                        <span class="" style="line-height: initial;">Enable login using your fingerprint. Your biometric data will remain on this device.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</template>
+
+<script>
+
+    export default (props, {$f7ready, $f7, $on, $update}) => {
+
+        const page_title = "";
+
+        //const page_title = "Supply Zone";
+
+        let countToApprove, countMyRequests, countRequestsToWatch, countApprovedDeniedByMe, homeBiometricNotification, homeCardItemClass;
+
+        $f7ready(() => {
+
+            //
+
+        });
+
+        const setUpBiometricAuth = function (product) {
+
+            console.log("setUpBiometricAuth");
+
+        };
+
+        countToApprove=0;
+        countMyRequests=0;
+        countRequestsToWatch=0;
+        countApprovedDeniedByMe=0;
+
+        $f7.request.get('https://commercial.hyperefficient2.net/app/get_dashboard_metrics/' + window.localStorage.getItem('userId') ).then((res) => {
+            var stats = JSON.parse(res.data);
+            countToApprove = stats.countToApprove;
+            countMyRequests = stats.countMyRequests;
+            countRequestsToWatch = stats.countRequestsToWatch;
+            countApprovedDeniedByMe = stats.countApprovedDeniedByMe;
+
+            cordova.plugins.notification.badge.set(countToApprove);
+            $update();
+
+        });
+
+        $on('pageInit', () => {
+
+
+
+            homeBiometricNotification = $$("#home-biometric-notification");
+
+            homeCardItemClass = $$(".home-cards.ripple");
+
+            // trigger re-render
+            $update();
+
+
+
+            console.log('page_title:', page_title, 'page init');
+
+            MainApp.on("REFRESH_USER_DATA", function(userData){
+
+                console.warn('REFRESH_USER_DATA', userData);
+
+                let user_id = userData.response.user_data.id;
+
+                MainApp.dialog.progress("Retrieving requisitions...");
+
+                $f7.request.get('https://commercial.hyperefficient2.net/app/get_dashboard_metrics/' + user_id + '?bypass=1').then((res) => {
+
+                    // update user with new data
+                    requisitions = JSON.parse(res.data);
+
+                    countToApprove = requisitions.countToApprove;
+                    countMyRequests = requisitions.countMyRequests;
+                    countRequestsToWatch = requisitions.countRequestsToWatch;
+                    countApprovedDeniedByMe = requisitions.countApprovedDeniedByMe;
+
+                    //console.log("REQUISITIONS:", countToApprove, countMyRequests, countRequestsToWatch, countApprovedDeniedByMe);
+
+                    cordova.plugins.notification.badge.set(countToApprove);
+
+                    // trigger re-render
+                    $update();
+
+                    MainApp.dialog.close();
+
+                });
+
+            });
+
+            homeBiometricNotification.on('click', function () {
+
+                MainAppAuth.biometric.lockData(
+                    function () {
+
+                        app.notification.create({
+                            icon: '<img src="static/images/logo.png" width="20" height="18" />',
+                            title: 'Supply Zone',
+                            titleRightText: 'now',
+                            subtitle: 'Biometric Auth Activated',
+                            text: 'You have enabled login using a fingerprint',
+                            closeOnClick: true,
+                        }).open();
+
+                    },
+                    function () {
+
+                        MainApp.toast.create({
+                            text: message ? message : "An error occured while activating Biometric Auth. Please try again.",
+                            position: 'bottom',
+                            closeTimeout: 3000,
+                            on: {
+                                opened: function () {
+                                    console.log('Toast opened')
+                                }
+                            }
+                        }).open();
+
+                    },
+                    {
+                        description: "You are about to enable password-less login by fingerprint scan. Please authenticate using your finger now.",
+                        secret: MainAppData.user_data.response.user_data.username
+                    }
+                );
+
+            });
+
+            $$(".home-cards.ripple").click(function(){
+
+                let _url = $$(this).attr("data-url");
+
+                if( parseInt( $$(this).attr("data-count") )  === 0 ){
+                    app.toast.show(
+                        {text:$$(this).attr("data-error"),
+                            position:'bottom',
+                            closeTimeout: 3000}
+                            );
+
+                    return false;
+                }
+
+                //console.log("DATA:_url:", _url);
+
+                MainApp.views.main.router.navigate(_url, {
+                    reloadCurrent: false,
+                    ignoreCache: true,
+                });
+
+            });
+
+            $$(".left-panel-link").click(function(){
+
+                let _url = $$(this).attr("data-url");
+
+                MainApp.views.main.router.navigate(_url, {
+                    reloadCurrent: false,
+                    ignoreCache: true,
+                });
+                app.tab.show("#view-home",true);
+                MainApp.panel.close();
+
+            });
+
+            $$(".tab-home-link").click(function(){
+
+                MainApp.views.main.router.navigate('/', {
+                    reloadCurrent: false,
+                    ignoreCache: true,
+                });
+
+            });
+
+
+
+
+
+        });
+
+        $on('pageMounted', (e, page) => {
+            console.log('page_title:', page_title, 'page mounted');
+        });
+        $on('pageBeforeIn', (e, page) => {
+            console.log('page_title:', page_title, 'page before in');
+        });
+        $on('pageAfterIn', (e, page) => {
+            console.log('page_title:', page_title, 'page after in');
+        });
+        $on('pageBeforeOut', (e, page) => {
+            console.log('page_title:', page_title, 'page before out');
+        });
+        $on('pageAfterOut', (e, page) => {
+            console.log('page_title:', page_title, 'page after out');
+        });
+        $on('pageBeforeUnmount', (e, page) => {
+            console.log('page_title:', page_title, 'page before unmount');
+        });
+        $on('pageBeforeRemove', (e, page) => {
+            console.log('page_title:', page_title, 'page before remove');
+        });
+
+        return $render;
+
+    }
+
+</script>

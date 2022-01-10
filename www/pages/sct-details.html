@@ -1,0 +1,438 @@
+<template>
+    <div class="page navbar-fixed" data-page="home">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="ios-only">Back</span>
+                    </a>
+                </div>
+                <div class="title">${page_title}</div>
+                <div class="right">
+                    <a href="#" class="link back">
+                        <i class="icon f7-icons">arrow_2_circlepath</i>
+                    </a>
+                </div>
+
+                <!-- Subnavbar -->
+                <div class="subnavbar">
+                    <div class="subnavbar-inner">
+                        <!-- Subnavbar content, for example tabs buttons -->
+                        <div class="segmented">
+                            <a href="#sctTab1" class="button tab-link button-active">Details</a>
+                            <a href="#sctTab2" class="button tab-link">Trend Graphs</a>
+                            <a href="#sctTab3" class="button tab-link">Activities</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="page-content hide-navbar-on-scroll bg-pattern">
+
+            <div class="tabs-swipeable-wrap">
+
+                <div class="tabs">
+                    <div class="tab tab-active" id="sctTab1">
+                        <div class="block-title">Product Details</div>
+                        <div class="list inset">
+
+                            ${details.map((product) => $h`
+
+                            <ul>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">archivebox</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Product Name</strong></div>
+                                                ${product.description}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">grid_circle</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Product SKU</strong></div>
+                                                ${product.sku}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">equal_circle</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Product Description</strong></div>
+                                                ${product.description}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">rectangle_on_rectangle_angled</i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>EOQ</strong></div>
+                                                ${product.eoq}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">rectangle_on_rectangle
+                                        </i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>ROL</strong></div>
+                                                ${product.rol}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">gauge</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Unit Of Measurement</strong></div>
+                                                ${product.unit_of_measurement}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">doc_append</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>No. of Requisitions</strong></div>
+                                               ${product.requests}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">clock</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Lead Time</strong></div>
+                                                ${product.lead_time}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">doc_text</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Technical Datasheet</strong></div>
+                                                ${product.datasheet}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content sct-gallery">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">photo_on_rectangle</i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Photo Gallery</strong></div>
+                                                6 images
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content sct-youtube">
+                                        <div class="item-media"><i
+                                                class="icon f7-icons sku-list">play_rectangle_fill</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Youtube Video</strong></div>
+                                                ${product.youtube}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">globe</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>Manufacture Website</strong></div>
+                                                ${product._product_manufacturer_website}
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+
+                            `)}
+
+                            <br/>
+                            <br/>
+                        </div>
+                    </div>
+                    <div class="tab" id="sctTab2">
+                        <div class="block">
+                            <div class="block-title">Cost Trend Graph</div>
+                            <div class="block block-strong">
+                                <div class="area-chart area-chart-lines-cost"></div>
+                            </div>
+                        </div>
+
+                        <div class="block">
+                            <hr />
+                        </div>
+
+                        <div class="block">
+                            <div class="block-title">Volume Trend Graph</div>
+                            <div class="block block-strong">
+                                <div class="area-chart area-chart-lines-volume"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab" id="sctTab3">
+
+                        <div class="block-title">Sourcing Events</div>
+                        <div class="list inset">
+                            <ul>
+
+                                <li>
+                                    <a href="/sourcing-events-details/id" class="item-link item-content">
+                                        <div class="item-media"><i class="icon f7-icons sku-list">doc_append</i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header"><strong>RFQ 800438573</strong></div>
+                                                School Stationery
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+
+                            </ul>
+                            <br/>
+                            <br/>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</template>
+<style>
+
+    i.icon.sku-list {
+        display: inline-block;
+        vertical-align: middle;
+        background-size: 100% auto;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-style: normal;
+        position: relative;
+        color: var(--f7-theme-color);
+        font-size: 24px;
+    }
+
+    i.icon.f7-icons.small {
+        font-size: 20px;
+        margin-top: -3px;
+    }
+
+    .title.sheet-modal-title {
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex-shrink: 10;
+        font-weight: var(--f7-navbar-title-font-weight);
+        display: inline-block;
+        line-height: var(--f7-navbar-title-line-height);
+        text-align: var(--f7-navbar-title-text-align);
+        font-size: var(--f7-navbar-title-font-size);
+        margin-left: var(--f7-navbar-title-margin-left);
+        margin-right: var(--f7-navbar-title-margin-left);
+    }
+</style>
+<script>
+    export default (props, {$f7route, $f7ready, $f7, $on, $update}) => {
+
+        let page_title = "Smart Cost Tracking";
+
+        let details = [];
+
+        let _current_params = $f7route.params;
+        let areaLines;
+
+        // helpers data for axis
+        const dates = [];
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth();
+        for (let i = 0; i < 4; i += 1) {
+            dates.push(new Date(year, month - (3 - i)))
+        }
+        const axisDateFormat = Intl.DateTimeFormat(undefined, {month: 'short', year: 'numeric'})
+        const tooltipDateFormat = Intl.DateTimeFormat(undefined, {month: 'long', year: 'numeric'})
+
+
+        $f7.request.get('https://commercial.hyperefficient2.net/app/get_sku/' + _current_params.sku ).then((res) => {
+            var _details =  JSON.parse( res.data );
+
+            details = Object.keys(_details).map((key) => _details[key]);
+
+
+            // trigger re-render
+            $update();
+        })
+
+
+        $on('pageInit', () => {
+
+            console.log('page_title:', page_title, 'page init');
+
+            //console.log("LOAD SCT Data");
+
+
+        });
+
+        $on('pageMounted', (e, page) => {
+
+            console.log('page_title:', page_title, 'page mounted');
+
+            /*=== Popup ===*/
+            var myPhotoBrowserPopup = $f7.photoBrowser.create({
+                photos: [
+                    'https://cdn.framework7.io/placeholder/sports-1024x1024-1.jpg',
+                    'https://cdn.framework7.io/placeholder/sports-1024x1024-2.jpg',
+                    'https://cdn.framework7.io/placeholder/sports-1024x1024-3.jpg',
+                ],
+                type: 'popup'
+            });
+
+            $$('.sct-gallery').on('click', function (e) {
+                myPhotoBrowserPopup.open();
+            });
+
+            /*=== With Video ===*/
+            var myPhotoBrowserVideo = $f7.photoBrowser.create({
+                photos: [
+                    {
+                        html: '<iframe src="//www.youtube.com/embed/lmc21V-zBq0" frameborder="0" allowfullscreen></iframe>',
+                        caption: 'Woodkid - Run Boy Run (Official HD Video)'
+                    },
+                    {
+                        url: 'https://cdn.framework7.io/placeholder/sports-1024x1024-2.jpg',
+                        caption: 'Second Caption Text'
+                    },
+                    {
+                        url: 'https://cdn.framework7.io/placeholder/sports-1024x1024-3.jpg',
+                    },
+                ],
+                theme: 'dark',
+                type: 'standalone'
+            });
+
+            $$('.sct-youtube').on('click', function (e) {
+                myPhotoBrowserVideo.open();
+            });
+
+            areaLines = $f7.areaChart.create({
+                el: '.area-chart-lines-cost',
+                tooltip: true,
+                axis: true,
+                axisLabels: dates,
+                legend: true,
+                toggleDatasets: true,
+                lineChart: true,
+                formatAxisLabel(date) {
+                    return axisDateFormat.format(date);
+                },
+                formatTooltipAxisLabel(date) {
+                    return tooltipDateFormat.format(date);
+                },
+                datasets: [
+
+                    {
+                        label: 'Blue data',
+                        color: '#1b5cc4',
+                        values: [0, 75, 133, 237, 234, 632, 543, 346, 864, 546, 743, 478]
+                    }
+                ]
+            });
+
+            areaLines = $f7.areaChart.create({
+                el: '.area-chart-lines-volume',
+                tooltip: true,
+                axis: true,
+                axisLabels: dates,
+                legend: true,
+                toggleDatasets: true,
+                lineChart: true,
+                formatAxisLabel(date) {
+                    return axisDateFormat.format(date);
+                },
+                formatTooltipAxisLabel(date) {
+                    return tooltipDateFormat.format(date);
+                },
+                datasets: [
+                    {
+                        label: 'Red data',
+                        color: '#f00',
+                        values: [0, 300, 127, 47]
+                    },
+                    {
+                        label: 'Blue data',
+                        color: '#00f',
+                        values: [0, 75, 133, 237]
+                    },
+                    {
+                        label: 'Green data',
+                        color: '#0f0',
+                        values: [0, 100, 250, 307]
+                    },
+                ]
+            });
+
+
+        });
+        $on('pageBeforeIn', (e, page) => {
+            console.log('page_title:', page_title, 'page before in');
+        });
+        $on('pageAfterIn', (e, page) => {
+            console.log('page_title:', page_title, 'page after in');
+        });
+        $on('pageBeforeOut', (e, page) => {
+            console.log('page_title:', page_title, 'page before out');
+        });
+        $on('pageAfterOut', (e, page) => {
+            console.log('page_title:', page_title, 'page after out');
+        });
+        $on('pageBeforeUnmount', (e, page) => {
+            console.log('page_title:', page_title, 'page before unmount');
+        });
+        $on('pageBeforeRemove', (e, page) => {
+            console.log('page_title:', page_title, 'page before remove');
+        });
+
+        return $render;
+    }
+</script>

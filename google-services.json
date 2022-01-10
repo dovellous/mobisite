@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "751514788423",
+    "firebase_url": "https://supply-zone.firebaseio.com",
+    "project_id": "supply-zone",
+    "storage_bucket": "supply-zone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751514788423:android:36fc37dcea9671e7",
+        "android_client_info": {
+          "package_name": "com.inboxcorporation.supplyzone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "751514788423-nda7ssj9e1e2u05oc2ja75qd816hoo11.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOZHLEbQFaa_NL1kQqY5bTXbOKkPCPnB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751514788423-nda7ssj9e1e2u05oc2ja75qd816hoo11.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751514788423:android:9671380dce1f24195bc762",
+        "android_client_info": {
+          "package_name": "org.supplyzone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "751514788423-nda7ssj9e1e2u05oc2ja75qd816hoo11.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOZHLEbQFaa_NL1kQqY5bTXbOKkPCPnB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751514788423-nda7ssj9e1e2u05oc2ja75qd816hoo11.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

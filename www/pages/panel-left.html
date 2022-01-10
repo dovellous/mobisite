@@ -1,0 +1,204 @@
+<template>
+
+    <div class="page">
+        <div class="page-content">
+            <div class="block" style="padding-top: 30px;background-image: url(static/images/wallpaper.jpg);background-size: cover;margin-top: 0;padding-bottom: 20px;margin-bottom: 0px">
+                <p class="">
+                    <i class="icon f7-icons panel-f7-icons"
+                       style="color: #fff !important;font-size: 33px;">person_circle</i>
+                </p>
+                <h3 class="" style="margin-bottom: 0px;">
+                    <span class="text-color-white">${displayName}</span>
+                </h3>
+                <span class="text-color-white">${email}</span>
+            </div>
+            <div class="list " style="margin-top: 0px">
+                <ul>
+                    <li>
+                        <a href="#"  class="item-link left-panel-link item-content go-home" data-url="/">
+                            <div class="item-media">
+                                <i class="icon f7-icons panel-f7-icons">house_alt</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Home</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="item-link left-panel-link item-content open-view" data-url="/my-requests/approve/">
+                            <div class="item-media">
+                                <i class="icon f7-icons panel-f7-icons">checkmark_alt_circle</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">To Approve</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="item-link close-panel left-panel-link item-content open-view" data-url="/my-requests/mine/">
+                            <div class="item-media">
+                                <i class="icon f7-icons panel-f7-icons">list_bullet_below_rectangle</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">My Requests</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="item-link left-panel-link item-content open-view" data-url="/request-to-watch-details/">
+                            <div class="item-media">
+                                <i class="icon f7-icons panel-f7-icons">eye</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Requests To Watch</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="item-link left-panel-link item-content open-view" data-url="/my-requests/approved/">
+                            <div class="item-media">
+                                <i class="icon f7-icons panel-f7-icons">doc_checkmark</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Approved/Denied By Me</div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="item-link item-content open-view" data-url="/smart-cost-tracking/">
+                            <div class="item-media">
+                                <i class="icon f7-icons panel-f7-icons">money_dollar_circle</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Smart Cost Tracking</div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" class="item-link item-content open-view" data-url="/my-profile/">
+                            <div class="item-media">
+                                <i class="icon f7-icons panel-f7-icons">person_circle</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">My Profile</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="item-link item-content open-view" data-url="/settings/">
+                            <div class="item-media">
+                                <i class="icon f7-icons panel-f7-icons">gear_alt</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Settings</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="item-link item-content sign-out">
+                            <div class="item-media">
+                                <i class="icon f7-icons panel-f7-icons">power</i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Sign Out</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="block">
+                <p>
+                    <small class="text-color-gray">
+                        (c) 2021. SupplyZone. All Rights Reserved<br />Version 2.1.0 20211109
+                    </small>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</template>
+<script>
+    export default (props, {$f7ready, $f7, $on, $update}) => {
+
+        let signOutEl, displayName, email, photoURL, openViewEl;
+
+        const checkBiometricDevice = () => {
+
+            //MainAppAuth.biometric.unLockData(null, console.log, {description: "Authorise app"});
+
+        };
+
+        const attachEvents = () => {
+
+            MainApp.on("REFRESH_USER_DATA", function(userData){
+
+                MainAppData.user_data = userData;
+
+                console.log("REFRESH_USER_DATA 1", userData );
+
+                console.log("REFRESH_USER_DATA 2", userData.response );
+
+                if('response' in userData){
+
+                    displayName = userData.response.user_data.full_name;
+
+                    email = userData.response.user_data.email_address;
+
+                    $update();
+
+                }
+
+            });
+
+            signOutEl.on("click", () => {
+
+                MainApp.panel.close();
+                window.localStorage.removeItem('userData');
+                window.localStorage.removeItem('userId');
+                $$('#app-toolbar').hide();
+                MainApp.views.current.router.navigate('/login/', {
+                    reloadCurrent: true,
+                    ignoreCache: true,
+                });
+
+            });
+
+            $$(".a-vendor-directory").on("click", () => {
+
+                MainApp.panel.close();
+
+                MainApp.views.current.router.navigate( "/vendor-directory/" , {
+                    reloadCurrent: false,
+                    ignoreCache: true,
+                });
+
+            });
+
+        };
+
+        $f7ready(() => {
+
+
+
+        });
+
+        $on('pageInit', (e, page) => {
+
+            signOutEl = $$('.sign-out');
+
+            openViewEl = $$('.open-view');
+
+            attachEvents();
+
+            checkBiometricDevice();
+
+            window.MainApp.on("NETWORK_CHANGE", console.log);
+
+        });
+
+        return $render;
+    }
+
+</script>

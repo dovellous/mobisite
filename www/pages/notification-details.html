@@ -1,0 +1,337 @@
+<template>
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a class="link back app-pages-messenger-chats-btn-back" href="/notifications/">
+                        <i class="icon icon-back"></i>
+                        <span class="if-not-md">Back</span>
+                        <img class="app-pages-messenger-chats-avatar" src="${chatIcon}}" width="48" style="border-radius: 100px;"/>
+                    </a>
+                </div>
+                <div class="title app-pages-messenger-chats-title" style="margin-left: 0; padding-left: 0;">
+                    <span class="app-pages-messenger-chats-username chat-title">${chatName}</span>
+                    <span class="subtitle app-pages-messenger-chats-status chat-subtitle">${chatStatus}</span>
+                </div>
+                <div class="right">
+
+                </div>
+            </div>
+        </div>
+        <div class="toolbar messagebar">
+            <div class="toolbar-inner">
+                <div class="messagebar-area">
+                    <textarea class="resizable" placeholder="Message"></textarea>
+                </div>
+                <a class="link send-link" href="#" @click=${sendMessage}>
+                    <i class="icon f7-icons">paperplane</i>
+                </a>
+                <a class="link send-link sheet-open" href="#" data-sheet=".attachment-modal">
+                    <i class="icon f7-icons">paperclip</i>
+                </a>
+            </div>
+        </div>
+        <div class="page-content bg-pattern hide-toolbar-on-scroll hide-tabbar no-toolbar hide-toolbar messages-content">
+            <div class="messages">
+
+                ${messages.map((message) => $h`
+
+                <div class="message message-received" data-from="${message.from_id}">
+                    <div class="message-avatar"
+                         style="background-image:url(https://ui-avatars.com/api/?font-size=0.33&background=00CC99&color=fff&name=${message.sender})"></div>
+                    <div class="message-content">
+                        <div class="message-name" style="display: block;">${message.sender}</div>
+                        <div class="message-header">${message.date}</div>
+                        <div class="message-bubble ${message.attachment_text_class}">
+                            <div class="message-text">${message.message}</div>
+                        </div>
+                        <a href="${message.href}"
+                           target="_blank"   class="button button-outline external ${message.attachment_class}">
+                            <i class="icon f7-icons" style="font-size: 14px">paperclip</i> ${message.attachment}
+                        </a>
+                    </div>
+                </div>
+
+                `)}
+
+            </div>
+
+            <div class="sheet-modal attachment-modal">
+                <div class="toolbar">
+                    <div class="toolbar-inner">
+                        <div class="left">
+                            <a class="link sheet-close send-attachment" href="#" @click=${attachMessage}>
+                                <i class="icon f7-icons">checkmark_alt</i> SUBMIT
+                            </a>
+                        </div>
+                        <div class="right">
+                            <a class="link sheet-close" href="#">
+                                <i class="icon f7-icons">multiply</i> CANCEL
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sheet-modal-inner">
+                    <form method="post" action="https://commercial.hyperefficient2.net/app/attach_document" class="form-ajax-submit" enctype="multipart/form-data" id="frm-file">
+                        <div class="list inline-labels no-hairlines-md">
+                            <ul>
+                                <li class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">File Type</div>
+                                        <div class="item-input-wrap input-dropdown-wrap">
+                                            <select id="document_type" name="document_type" placeholder="Please choose...">
+                                                <option>Receipt</option>
+                                                <option>Delivery Note</option>
+                                                <option>Purchase Order</option>
+                                                <option>Invoice</option>
+                                                <option>Bank Transfer</option>
+                                                <option>Proof Of Payment(POP)</option>
+                                                <option>Quotation</option>
+                                                <option>Timesheet</option>
+                                                <option>Coupon</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">File Name</div>
+                                        <div class="item-input-wrap" id="file-name-input">
+
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="item-content item-input">
+                                    <div class="item-inner">
+                                        <div class="item-title item-label">Attachment</div>
+                                        <div class="item-input-wrap" id="attachment-input">
+
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+            <div class="popup popup-attachment">
+                <div class="block" id="preview-image-container">
+                    <p><a class="link popup-close" href="#">Close</a></p>
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</template>
+<script>
+    let selected_request_id;
+    export default (props, { $f7route, $f7ready, $f7, $on, $update }) => {
+
+        let _current_params = $f7route.params;
+
+        let userData = JSON.parse( window.localStorage.getItem('userData') );
+        let messages = [];
+
+        let messagebar;
+
+        const userId = userData.response.user_data.id;
+        const chatName = userData.response.user_data.full_name ;
+
+        const chatIcon = "https://ui-avatars.com/api/?font-size=0.33&background=00CC99&color=fff&name="+chatName;
+
+        const chatStatus = "online";
+
+        // Response flag
+        var responseInProgress = false;
+
+        selected_request_id = _current_params.request_number;
+
+        $f7.request.get('https://commercial.hyperefficient2.net/app/get_quote_messages/' + _current_params.request_number + '/' +  window.localStorage.getItem('userId') ).then((res) => {
+            var _messages =  JSON.parse( res.data );
+
+            messages = Object.keys(_messages).map((key) => _messages[key]);
+
+
+            // trigger re-render
+            $update();
+
+            setTimeout(function(){
+                $$(".message").each(function(){
+                    if( $$(this).attr("data-from") == window.localStorage.getItem('userId') ){
+                        $$(this).removeClass("message-received");
+                        $$(this).addClass("message-sent");
+                    }
+                })
+            }, 300);
+
+
+            //get updated badge
+            $f7.request.get('https://commercial.hyperefficient2.net/app/get_unread_messages/' + window.localStorage.getItem('userId') ).then((res) => {
+                var result =  JSON.parse( res.data );
+
+                if( parseInt( result.count ) > 0 ){
+                    $$("#badge-counter-messages-3").show();
+                    $$("#badge-counter-messages-3").html(result.count);
+                }
+
+                var extraInputs = '<div class="row"><button class="button button-fill button-raised col" onclick="selectFile()">Gallery</button>';
+                extraInputs+= '<button class="button button-fill button-raised col" onclick="takePicture()"><i class="icon f7-icons">camera</i></button></div>';
+
+                extraInputs+= '<input type="hidden" name="quote_id" value="'+selected_request_id+'">';
+                extraInputs+= '<input type="hidden" name="file_data" id="file_data">';
+                extraInputs+= '<input type="hidden" name="to_id" value="'+window.localStorage.getItem('userId')+'">';
+                extraInputs+= '<input type="hidden" name="user_id" value="'+window.localStorage.getItem('userId')+'">';
+                $$("#attachment-input").html( extraInputs );
+                $$("#file-name-input").html('<input type="text" name="file_name">');
+
+                $$("#preview-image-container").append('<img style="max-width: 100%; max-height: 100%" id="preview-image">');
+
+                // trigger re-render
+                $update();
+
+            })
+
+        })
+        // Receive Message
+        const receiveMessage = () => {
+            responseInProgress = true;
+            setTimeout(function () {
+                // Get random answer and random person
+                var answer = answers[Math.floor(Math.random() * answers.length)];
+                var person = people[Math.floor(Math.random() * people.length)];
+
+                // Show typing indicator
+                messages.showTyping({
+                    header: person.name + ' is typing',
+                    avatar: person.avatar
+                });
+
+                setTimeout(function () {
+                    // Add received dummy message
+                    messages.addMessage({
+                        text: answer,
+                        type: 'received',
+                        name: person.name,
+                        avatar: person.avatar
+                    });
+                    // Hide typing indicator
+                    messages.hideTyping();
+                    responseInProgress = false;
+                }, 4000);
+            }, 1000);
+        }
+
+        // attach message
+        const attachMessage = () => {
+            MainApp.preloader.show();
+            var formData = new FormData( document.querySelector("#frm-file") );
+            app.request.post('https://commercial.hyperefficient2.net/app/attach_document',
+                formData)
+                .then(function (res) {
+
+                    MainApp.preloader.hide();
+                    app.toast.show(
+                        {text:"Attachment has been uploaded",
+                            position:'bottom',
+                            closeTimeout: 3000}
+                    );
+
+                    app.views.current.router.refreshPage();
+
+                });
+        }
+
+        // Send Message
+        const sendMessage = () => {
+            var text = messagebar.getValue().replace(/\n/g, '<br>').trim();
+            // return if empty message
+            if (!text.length) return;
+
+            // Clear area
+            messagebar.clear();
+
+            // Return focus to area
+            messagebar.focus();
+
+            MainApp.request.post('https://commercial.hyperefficient2.net/app/send_message',
+                { quote_id:selected_request_id,
+                    message: text,
+                    is_automatic:1,
+                    user_id:window.localStorage.getItem('userId'),
+                    to_id:window.localStorage.getItem('userId') })
+                .then(function (res) {
+                    app.views.current.router.refreshPage();
+
+                });
+
+        }
+
+        $on('pageInit', () => {
+            // Init Messages
+            messages = MainApp.messages.create({
+                el: '.messages',
+
+                // First message rule
+                firstMessageRule: function (message, previousMessage, nextMessage) {
+                    // Skip if title
+                    if (message.isTitle) return false;
+                    /* if:
+                      - there is no previous message
+                      - or previous message type (send/received) is different
+                      - or previous message sender name is different
+                    */
+                    if (!previousMessage || previousMessage.type !== message.type || previousMessage.name !== message.name) return true;
+                    return false;
+                },
+                // Last message rule
+                lastMessageRule: function (message, previousMessage, nextMessage) {
+                    // Skip if title
+                    if (message.isTitle) return false;
+                    /* if:
+                      - there is no next message
+                      - or next message type (send/received) is different
+                      - or next message sender name is different
+                    */
+                    if (!nextMessage || nextMessage.type !== message.type || nextMessage.name !== message.name) return true;
+                    return false;
+                },
+                // Last message rule
+                tailMessageRule: function (message, previousMessage, nextMessage) {
+                    // Skip if title
+                    if (message.isTitle) return false;
+                    /* if (basically same as lastMessageRule):
+                    - there is no next message
+                    - or next message type (send/received) is different
+                    - or next message sender name is different
+                  */
+                    if (!nextMessage || nextMessage.type !== message.type || nextMessage.name !== message.name) return true;
+                    return false;
+                }
+            });
+
+            // Init Messagebar
+            messagebar = MainApp.messagebar.create({
+                el: '.messagebar'
+            });
+
+            $$('#frm-file').on('formajax:success', function (e) {
+
+
+
+
+            });
+        });
+
+        return $render;
+    }
+
+
+
+</script>

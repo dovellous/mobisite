@@ -1,0 +1,191 @@
+<template>
+
+    <div class="page" data-name="products">
+
+        <div class="navbar navbar-current">
+
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a class="link icon-only panel-open" data-panel="left" href="#">
+                        <i class="icon material-icons md-only">menu</i>
+                    </a>
+                </div>
+                <div class="title sliding">
+                    ${page_title}
+                </div>
+                <div class="right">
+                    <div class="right">
+                        <a class="link icon-only panel-open" data-panel=".panel-right-default" href="#">
+
+                            <i class="icon material-icons md-only">more_vert</i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="page-content pattern">
+
+            <div class="block" id="requestsListContainer">
+
+                <div class="card">
+                    <div class="card-header">Details</div>
+                    <div class="card-content card-content-padding">
+                        <div class="list">
+                            <ul>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon icon-f7"></i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header">Email</div>
+                                                john@doe
+                                                <div class="item-footer">Home</div>
+                                            </div>
+                                            <div class="item-after">Edit</div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon icon-f7"></i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header">Email</div>
+                                                john@doe
+                                                <div class="item-footer">Home</div>
+                                            </div>
+                                            <div class="item-after">Edit</div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon icon-f7"></i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header">Email</div>
+                                                john@doe
+                                                <div class="item-footer">Home</div>
+                                            </div>
+                                            <div class="item-after">Edit</div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="item-link item-content">
+                                        <div class="item-media"><i class="icon icon-f7"></i></div>
+                                        <div class="item-inner">
+                                            <div class="item-title">
+                                                <div class="item-header">Email</div>
+                                                john@doe
+                                                <div class="item-footer">Home</div>
+                                            </div>
+                                            <div class="item-after">Edit</div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card-footer"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</template>
+
+<script>
+
+    export default (props, {$f7ready, $f7, $on, $update}) => {
+
+        const page_title = "Products";
+
+        let products = [1];
+
+        $f7ready(() => {
+
+            //
+
+        });
+        const errorLoadingImage = function (element) {
+
+            $$(element).attr('src', 'static/icons/no-image.png');
+
+        };
+
+
+        const openProduct = function (product) {
+
+            console.log("OPEN PRODUCT", product);
+
+            //TODO pass the parameters
+
+            //MainApp.views.main.router.navigate('/notification-details/');
+
+            let sku = 100;
+
+            MainApp.views.current.router.navigate('/sct-details/${sku}/', {
+                reloadCurrent: true,
+                ignoreCache: true,
+            });
+
+        };
+
+        $on('pageInit', () => {
+
+            console.log('page_title:', page_title, 'page init');
+
+            console.log("LOAD PRODUCTS");
+
+            $f7.request.get('https://commercial.hyperefficient2.net/buyer/get_all_products_json?bypass=1').then((res) => {
+                // update user with new data
+                products = JSON.parse(res.data);
+
+                console.log("PRODUCTS:", products);
+
+                // trigger re-render
+                $update();
+            }).catch(function (err) {
+                console.log("HTTP ERROR");
+                console.log(err.xhr);
+                console.log(err.status);
+                console.log(err.message);
+                MainAppErrors.error_http(err);
+            });
+
+        });
+
+        $on('pageMounted', (e, page) => {
+            console.log('page_title:', page_title, 'page mounted');
+        });
+        $on('pageBeforeIn', (e, page) => {
+            console.log('page_title:', page_title, 'page before in');
+        });
+        $on('pageAfterIn', (e, page) => {
+            console.log('page_title:', page_title, 'page after in');
+        });
+        $on('pageBeforeOut', (e, page) => {
+            console.log('page_title:', page_title, 'page before out');
+        });
+        $on('pageAfterOut', (e, page) => {
+            console.log('page_title:', page_title, 'page after out');
+        });
+        $on('pageBeforeUnmount', (e, page) => {
+            console.log('page_title:', page_title, 'page before unmount');
+        });
+        $on('pageBeforeRemove', (e, page) => {
+            console.log('page_title:', page_title, 'page before remove');
+        });
+
+        return $render;
+
+    }
+
+</script>

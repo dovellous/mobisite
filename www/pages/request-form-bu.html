@@ -1,0 +1,616 @@
+<template>
+    <div class="page" data-name="requests">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner sliding">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <!-- back button text will be visible only in iOS and Aurora themes -->
+                        <span class="if-not-md">Back</span>
+                    </a>
+                </div>
+                <div class="title sliding">
+                    ${page_title}
+                </div>
+                <div class="right">
+                    <div class="right">
+                        <a class="link icon-only" href="#">
+                            <i class="icon material-icons md-only ">done</i>
+                        </a>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content bg-pattern">
+            <form id="frm-requisition-form" action="https://commercial.hyperefficient2.net/app/submit_request"
+                  method="POST" class="form-ajax-submit">
+                <input type="hidden" name="form_id" id="form_id">
+                <input type="hidden" name="is_automatic" value="1">
+                <input type="hidden" name="company_id" id="company_id">
+                <input type="hidden" name="user_id" id="user_id">
+                <div class="block no-padding">
+
+                    <div class="card">
+                        <div class="card-header"><strong>Requisition Details</strong></div>
+
+                        <div class="card-content">
+                            <!-- Card content -->
+
+                            <div class="list">
+
+                                <ul>
+
+                                    <li>
+                                        <a href="#" class="item-link item-content">
+                                            <div class="item-media"><i class="icon f7-icons">person_circle</i></div>
+                                            <div class="item-inner">
+                                                <div class="item-title">
+                                                    <div class="item-header"><strong>Requester</strong></div>
+                                                    <span id="spn-requester">${requester}</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#" class="item-link item-content">
+                                            <div class="item-media"><i class="icon f7-icons">calendar_today</i></div>
+                                            <div class="item-inner">
+                                                <div class="item-title">
+                                                    <div class="item-header"><strong>Date</strong></div>
+                                                    <span id="spn-date">${date}</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-footer"></div>
+                    </div>
+
+                </div>
+
+                <div class="block no-padding">
+
+                    <div class="card">
+
+                            <div class="card-header"><strong>Items</strong></div>
+
+                            <div class="card-content">
+                            <!-- Card content -->
+
+                                <div class="list accordion-list" style="background-color: transparent">
+
+                                    <ul id="sku-list-ul"></ul>
+
+                                    <div class="block block-strong">
+
+                                        <button class="button button-large button-fill button-preloader ${isLoading ? 'button-loading' : ''}"
+                                                @click=${addRow}>
+                                            <span class="preloader"></span>
+                                            <span>Add another row</span>
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="card-content" style="padding: 20px;">
+
+                                <div class="dropzone dz-clickable" id="file-drop-zone">
+
+                                    <div class="dz-message">
+                                        <div class="drag-icon-cph">
+                                            <i class="material-icons" style="font-size: 72px;">touch_app</i>
+                                        </div>
+                                        <h3>Drop files here or click to upload.</h3>
+                                        <em>(This is just a demo dropzone. Selected files are <strong>not</strong> actually
+                                            uploaded.)</em>
+                                        <input type="file" style="display: block; visibility: hidden" id="upload_files"/>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="card-content" style="padding:0px 25px;">
+
+                                <div class="item-inner">
+                                    <div class="item-title item-label"><strong>Cost Center</strong></div>
+                                    <div class="item-input-wrap input-dropdown-wrap"><select placeholder="-- SELECT COST CENTER --" class="input-with-value" style=" display: block; border: 1px solid #bbbbbb; width: 100%; padding: 10px; border-radius: 5px; margin-top: 10px; ">
+                                        <option value="Male">Operations</option>
+                                        <option value="Female">Marketing</option>
+                                    </select></div>
+                                </div>
+
+                            </div>
+
+                            <div class="card-content" style="padding: 0px 25px;">
+
+                                <div class="list no-hairlines-md">
+                                    <ul>
+                                        <li class="item-content item-input item-input-outline" style="padding: 0;">
+                                            <div class="item-inner" style="padding-right: 0px; padding-bottom: 20px;">
+                                                <div class="item-title item-floating-label">Additional Notes</div>
+                                                <div class="item-input-wrap">
+                                                    <textarea class="resizable" placeholder="Addional Notes"></textarea>
+                                                    <span class="input-clear-button"></span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+
+
+
+
+                    </div>
+
+                </div>
+
+                <div class="block no-padding">
+
+                    <div class="card">
+                        <div class="card-footer no-padding grid-totals">
+                            <div class="list" style="width: 100%;">
+                                <ul>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title"><strong>Sub Total</strong></div>
+                                                <div class="item-after text-color-white"><strong>${currencySymbol}<span
+                                                            id="spn-sub-total"></span></strong></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title"><strong>VAT</strong></div>
+                                                <div class="item-after text-color-white"><strong>${currencySymbol}
+                                                    <span
+                                                            id="spn-vat-total"></span></strong></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-title"><strong>Grand Total</strong></div>
+                                                <div class="item-after text-color-white"><strong>${currencySymbol}
+                                                    <span
+                                                            id="spn-grand-total"></span></strong></div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="block">
+
+                    <button type="submit" class="button button-large button-fill button-preloader ${isLoading ? 'button-loading' : ''}">
+                        <span class="preloader"></span>
+                        <span>Submit for Approval</span>
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</template>
+
+<script>
+
+
+    export default (props, {$f7route, $f7ready, $f7, $on, $update}) => {
+
+        let _current_params = $f7route.params;
+
+        let request_id = _current_params.request_id;
+        let form_id = _current_params.form_id;
+
+
+        let page_title = "Requisitions Form";
+
+        let isLoading = false;
+
+        let currentRow = 0;
+
+        let subTotal, vat, grandTotal, currencySymbol, currency = 0;
+
+        let userData = JSON.parse( window.localStorage.getItem('userData') );
+
+        let requester = userData.response.user_data.full_name;
+
+        let date = moment().format("D MMM YYYY");
+
+        let sku_list = 'Apple Apricot Avocado Banana Melon Orange Peach Pear Pineapple'.split(' ');
+
+        let autocompleteStandaloneAjax = null;
+
+        let autocompleteDropdownAjax;
+
+
+        const load = () => {
+            isLoading = true;
+            $update();
+            setTimeout(() => {
+                isLoading = false;
+
+                var userData = JSON.parse(window.localStorage.getItem('userData'));
+                $$("#form_id").val(form_id);
+                $$("#company_id").val(userData.response.user_data.company_id);
+                $$("#user_id").val(userData.response.user_data.id);
+                if(parseInt(request_id) === 0){
+                    addRow();
+                }else{
+
+                    $f7.request.get('https://commercial.hyperefficient2.net/app/get_request_to_clone/' +request_id ).then((res) => {
+                        var requestItems =  JSON.parse( res.data );
+
+                        for(x=0;x<requestItems.length;x++){
+                            let html = getTemplate(requestItems[x].product,
+                                requestItems[x].product_description,
+                                requestItems[x].price,
+                                requestItems[x].quantity,
+                                requestItems[x].units,
+                                requestItems[x].vat,
+                                requestItems[x]._product_id,
+                                requestItems[x]._product_category);
+
+                            $$("#sku-list-ul").append(html);
+                            $update();
+                            renderAutoComplete(currentRow-1);
+                            $$("#sku-"+ (currentRow-1) ).change();
+                            calculateTotal();
+                        }
+
+
+
+                    })
+
+                }
+
+
+                $update();
+                setTimeout(function () {
+                    renderAutoComplete(currentRow);
+                }, 500);
+
+            }, 500);
+        };
+
+        const addRow = () => {
+
+            let html = getTemplate('','','','','','','','');
+
+            $$("#sku-list-ul").append(html);
+
+            setTimeout(function () {
+                renderAutoComplete(currentRow-1);
+            }, 500);
+
+        };
+
+        const removeLineItem = (id) => {
+
+            $$("#sku-row-"+id).remove();
+
+        };
+
+
+
+        const renderAutoComplete = (id) => {
+
+
+            autocompleteDropdownAjax = $f7.autocomplete.create({
+                inputEl: '#sku-'+id,
+                openIn: 'dropdown',
+                preloader: true, //enable preloader
+                /* If we set valueProperty to "id" then input value on select will be set according to this property */
+                valueProperty: 'value', //object's "value" property name
+                textProperty: 'label', //object's "text" property name
+                limit: 20, //limit to 20 results
+                dropdownPlaceholderText: 'Product SKU',
+                source: function (query, render) {
+                    var autocomplete = this;
+                    var results = [];
+                    if (query.length === 0) {
+                        render(results);
+                        return;
+                    }
+                    // Show Preloader
+                    autocomplete.preloaderShow();
+
+                    // Do Ajax request to Autocomplete data
+                    $f7.request({
+                        url: 'https://commercial.hyperefficient2.net/app/search_part_numbers',
+                        method: 'POST',
+                        dataType: 'json',
+                        //send "query" to server. Useful in case you generate response dynamically
+                        data: {
+                            query: query,
+                        },
+                        success: function (data) {
+                            results = data;
+
+                            // Hide Preoloader
+                            autocomplete.preloaderHide();
+                            // Render items by passing array with result items
+                            render(results);
+                        }
+                    });
+                },on: {
+                    change: function (value) {
+                        console.log(value);
+                        $$("#description-"+id).val( value[0].product_description );
+                        $$("#price-"+id).val( value[0].row.price );
+                        $$("#vat-"+id).val( value[0].row.vat );
+                        $$("#product_units-"+id).val( value[0].row.unit_of_measurement );
+                        $$("#_product_id-"+id).val( value[0].row.id );
+                        $$("#_product_description-"+id).val( value[0].row.product_description );
+                        $$("#_product_category_name-"+id).val( value[0].row.category_id );
+                        $$("#_product_category-"+id).val( value[0].row.category_id );
+                        $$("#_product_sku-"+id).val( value[0].row.sku );
+
+                    },
+                },
+            });
+
+        };
+
+        const getTemplate = (sku,description,price,quantity,vat,units,id,category) => {
+
+            var removeHtml = '';
+            var width = '100%';
+            if(currentRow != 0){
+                removeHtml = '<a href="#" class="button button-small button-fill" ' +
+                    'onclick="$$(\'#sku-row-'+currentRow+'\').remove();calculateTotal();"  style="margin-top: 15px;float:left">-</a>'
+                width = '80%';
+            }
+            let template = '<li id="sku-row-' + currentRow + '" class="sku-row-' + currentRow + ' accordion-item item-content item-input item-input-outline" style="display: block;">\n' +
+                removeHtml +
+                '   <a class="item-content item-link" href="#" style="display: block; width: '+width+';">\n' +
+                '                                        <div class="item-inner">\n' +
+                '                                            <div class="item-title item-floating-label">Product SKU</div>\n' +
+                '                                            <div class="item-input-wrap">\n' +
+                '                                                <input type="text" name="product_name[]" value="'+sku+'" placeholder="Enter product SKU" id="sku-' + currentRow + '" class="sku-' + currentRow + '"/>\n' +
+                '                                                <span class="input-clear-button"></span>\n' +
+                '                                            </div>\n' +
+                '                                        </div>\n' +
+                '                                    </a>\n' +
+                '                                    <div class="accordion-item-content"  style="display: block; width: 100%;" aria-hidden="true">\n' +
+                '\n' +
+                '\n' +
+                '                                        <div class="item-content row no-gap">\n' +
+                '                                            <!-- Each "cell" has col-[width in percents] class -->\n' +
+                '                                            <div class="col-100">\n' +
+                '\n' +
+                '                                                <div class="item-content">\n' +
+                '                                                    <div class="item-inner">\n' +
+                '                                                        <div class="item-title item-floating-label">Product Description</div>\n' +
+                '                                                        <div class="item-input-wrap">\n' +
+                '                                                            <input type="text" name="product_description[]" value="'+description+'" placeholder="Enter Product Description" id="description-' + currentRow + '" class="description-' + currentRow + '" />\n' +
+                '                                                            <span class="input-clear-button"></span>\n' +
+                '                                                        </div>\n' +
+                '                                                    </div>\n' +
+                '                                                </div>\n' +
+                '\n' +
+                '                                            </div>\n' +
+                '                                        </div>\n' +
+                '\n' +
+                '                                        <div class="item-content row no-gap">\n' +
+                '                                            <!-- Each "cell" has col-[width in percents] class -->\n' +
+                '                                            <div class="col-50">\n' +
+                '\n' +
+                '                                                <div class="item-content">\n' +
+                '                                                    <div class="item-inner">\n' +
+                '                                                        <div class="item-title item-floating-label">Quantity </div>\n' +
+                '                                                        <div class="item-input-wrap">\n' +
+                '                                                            <input type="number" onchange="calculateTotal()" name="product_quantity[]" value="'+quantity+'" placeholder="Enter quantity" id="quantity-' + currentRow + '" class="quantity-input quantity-' + currentRow + '" />\n' +
+                '                                                            <span class="input-clear-button"></span>\n' +
+                '                                                        </div>\n' +
+                '                                                    </div>\n' +
+                '                                                </div>\n' +
+                '\n' +
+                '                                            </div>\n' +
+                '                                            <div class="col-50">\n' +
+                '\n' +
+                '                                                <div class="item-content">\n' +
+                '                                                    <div class="item-inner">\n' +
+                '                                                        <div class="item-title item-floating-label">Price (USD)</div>\n' +
+                '                                                        <div class="item-input-wrap">\n' +
+                '                                                            <input type="number" onchange="calculateTotal()" name="price[]" value="'+price+'" placeholder="Enter unit price" id="price-' + currentRow + '" class="price-input price-\'+currentRow+\'" />\n' +
+                '                                                            <input type="hidden" name="product_vat[]" value="'+vat+'" id="vat-' + currentRow + '" class="vat-input" />\n' +
+                '                                                            <input type="hidden" name="product_units[]" value="'+units+'" id="product_units-' + currentRow + '"/>\n' +
+                '                                                            <input type="hidden" name="_product_id[]" value="'+id+'" id="_product_id-' + currentRow + '"/>\n' +
+                '                                                            <input type="hidden" name="_product_description[]" value="'+description+'" id="_product_description-' + currentRow + '"/>\n' +
+                '                                                            <input type="hidden" name="_product_category_name[]" value="'+category+'" id="_product_category_name-' + currentRow + '"/>\n' +
+                '                                                            <input type="hidden" name="_product_category[]" value="'+category+'" id="_product_category-' + currentRow + '"/>\n' +
+                '                                                            <input type="hidden" name="_product_sku[]" value="'+sku+'" id="_product_sku-' + currentRow + '"/>\n' +
+                '                                                            <span class="input-clear-button"></span>\n' +
+                '                                                        </div>\n' +
+                '                                                    </div>\n' +
+                '                                                </div>\n' +
+                '\n' +
+                '                                            </div>\n' +
+                '                                        </div>\n' +
+                '\n' +
+                '                                    </div>\n' +
+                '                                </li>';
+
+            currentRow++;
+            return template;
+
+        };
+
+
+
+        $f7ready(() => {
+
+            //
+
+        });
+
+        $on('pageInit', () => {
+
+            console.log('page_title:', page_title, 'page init');
+
+            subTotal = "0.00";
+            vat = "0.00";
+            grandTotal = "0.00";
+            currencySymbol = "$";
+            currency = "USD";
+            load();
+            renderAutoComplete(0);
+            calculateTotal();
+
+            $$("#file-drop-zone").on("click", function (e) {
+
+                $$("#upload_files").click();
+
+            })
+
+            $$('#frm-requisition-form').on('formajax:success', function (e) {
+                var data = e.detail.data; // Ajax response from action file
+                // do something with response data
+            });
+
+
+        });
+
+        $on('pageMounted', (e, page) => {
+            console.log('page_title:', page_title, 'page mounted');
+        });
+        $on('pageBeforeIn', (e, page) => {
+            console.log('page_title:', page_title, 'page before in');
+        });
+        $on('pageAfterIn', (e, page) => {
+            console.log('page_title:', page_title, 'page after in');
+        });
+        $on('pageBeforeOut', (e, page) => {
+            console.log('page_title:', page_title, 'page before out');
+        });
+        $on('pageAfterOut', (e, page) => {
+            console.log('page_title:', page_title, 'page after out');
+        });
+        $on('pageBeforeUnmount', (e, page) => {
+            console.log('page_title:', page_title, 'page before unmount');
+        });
+        $on('pageBeforeRemove', (e, page) => {
+            console.log('page_title:', page_title, 'page before remove');
+        });
+
+        return $render;
+
+    }
+
+</script>
+
+<style>
+    .dropzone.dz-clickable {
+        cursor: pointer;
+    }
+
+    .dropzone {
+        border: 2px solid transparent !important;
+        background-color: #eee !important;
+    }
+
+    .dropzone {
+        min-height: 150px;
+        border: 2px solid rgba(0, 0, 0, 0.3);
+        background: white;
+        padding: 20px 20px;
+    }
+
+    .dropzone, .dropzone * {
+        box-sizing: border-box;
+    }
+
+    .dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
+        cursor: pointer;
+    }
+
+    .dropzone .dz-message {
+        text-align: center;
+        margin: 2em 0;
+    }
+
+    .dropzone.dz-clickable * {
+        cursor: default;
+    }
+
+    .dropzone, .dropzone * {
+        box-sizing: border-box;
+    }
+
+    .dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
+        cursor: pointer;
+    }
+
+    .dropzone.dz-clickable * {
+        cursor: default;
+    }
+
+    .dropzone, .dropzone * {
+        box-sizing: border-box;
+    }
+
+    * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    div {
+        display: block;
+    }
+
+    .dropzone .dz-message {
+        text-align: center;
+        margin: 2em 0;
+    }
+
+    .dropzone.dz-clickable {
+        cursor: pointer;
+    }
+
+    .accordion-item.accordion-item-opened {
+        background-color: #fff;
+    }
+
+    .col-100 > .item-content, .col-50 > .item-content {
+        padding: 0px !important;
+    }
+
+    .accordion-item.item-content {
+        display: block;
+        border-bottom: 1px solid #ddd;
+    }
+
+</style>

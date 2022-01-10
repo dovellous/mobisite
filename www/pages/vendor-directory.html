@@ -1,0 +1,248 @@
+<template>
+    <div class="page navbar-fixed" data-page="home">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="left">
+                    <a href="#" class="link back">
+                        <i class="icon icon-back"></i>
+                        <span class="ios-only">Back</span>
+                    </a>
+                </div>
+                <div class="title">${page_title}</div>
+                <div class="right">
+                    <a href="#" class="link back">
+                        <i class="icon f7-icons">arrow_2_circlepath</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="list-index"></div>
+        <div class="page-content">
+            <div class="list simple-list contacts-list indexed-list-init">
+
+                <!-- class="link sheet-open" href="#" data-sheet=".my-sheet" -->
+
+                ${contacts_array.map((obj, index) => $h`
+
+                <div class="list links-list list-group ">
+                    <ul data-index="${index}">
+
+                        <li class="list-group-title"> ${obj[0]["initial"]}</li>
+
+                        ${obj[0]["names"].map((item, index2) => $h`
+
+                        <a class="link sheet-open open-contact" data-sheet=".my-sheet" data-initial="${obj[0]['initial']}" data-index1="${index}" data-index2="${index2}">
+
+                            <li > ${item.company_name}</li>
+
+                        </a>
+
+                        `
+                        )}
+
+                    </ul>
+                </div>
+
+                `
+                )}
+
+            </div>
+        </div>
+
+        <div class="sheet-modal my-sheet">
+            <div class="toolbar">
+                <div class="toolbar-inner">
+                    <div class="left">
+                        <div class="title sheet-modal-title">${selectedContact.company_name}</div>
+                    </div>
+                    <div class="right"><a class="link sheet-close" href="#">
+                        <i class="icon f7-icons">multiply</i>
+                    </a></div>
+                </div>
+            </div>
+            <div class="sheet-modal-inner">
+                <div class="list">
+                    <ul>
+                        <li>
+                            <a href="#" class="item-link item-content">
+                                <div class="item-media"><i class="icon f7-icons sku-list">person_circle</i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">
+                                        <div class="item-header"><strong>Contact</strong></div>
+                                        ${selectedContact.full_name}
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="item-link item-content">
+                                <div class="item-media"><i class="icon f7-icons sku-list">house</i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">
+                                        <div class="item-header"><strong>Address</strong></div>
+                                        ${selectedContact.physical_address}
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="item-link item-content">
+                                <div class="item-media"><i class="icon f7-icons sku-list">phone_circle</i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">
+                                        <div class="item-header"><strong>Phone</strong></div>
+                                        ${selectedContact.contact_number}
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="item-link item-content">
+                                <div class="item-media"><i class="icon f7-icons sku-list">envelope</i></div>
+                                <div class="item-inner">
+                                    <div class="item-title">
+                                        <div class="item-header"><strong>Email</strong></div>
+                                        ${selectedContact.email_address}
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</template>
+<style>
+    :root {
+        --f7-sheet-height: 320px;
+    }
+    i.icon.f7-icons.small{
+        font-size: 20px;
+        margin-top: -3px;
+        color: var(--f7-theme-color) !important;
+    }
+    .title.sheet-modal-title {
+        position: relative;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex-shrink: 10;
+        font-weight: var(--f7-navbar-title-font-weight);
+        display: inline-block;
+        line-height: var(--f7-navbar-title-line-height);
+        text-align: var(--f7-navbar-title-text-align);
+        font-size: var(--f7-navbar-title-font-size);
+        margin-left: var(--f7-navbar-title-margin-left);
+        margin-right: var(--f7-navbar-title-margin-left);
+    }
+</style>
+<script>
+    export default (props, { $f7ready, $f7, $on, $update }) => {
+
+        let page_title = "Vendor Directory";
+
+        let contacts = [];
+
+        let contacts_array = [];
+
+        let selectedContact = {};
+
+        const listify = () => {
+
+            var listIndex = $f7.listIndex.create({
+                // ".list-index" element
+                el: '.list-index',
+                // List el where to look indexes and scroll for
+                listEl: '.contacts-list',
+                // Generate indexes automatically based on ".list-group-title" and ".item-divider"
+                indexes: 'auto',
+                // Scroll list on indexes click and touchmove
+                scrollList: true,
+                // Enable bubble label when swiping over indexes
+                label: true,
+            });
+
+            $update();
+
+            setTimeout(function(){
+
+                $$('a.link.sheet-open.open-contact').on('click', function (e) {
+
+                    let initial = $$(this).attr('data-initial');
+
+                    let index1 = $$(this).attr('data-index1');
+
+                    let index2 = $$(this).attr('data-index2');
+
+                    console.log(contacts_array, initial, index1, 0, "name", index2);
+
+                    selectedContact = contacts_array[index1][0]["names"][index2];
+
+                    console.log("selectedContact", selectedContact);
+
+                    $update();
+
+                });
+
+            },1000);
+
+        };
+
+        $on('pageInit', () => {
+
+            console.log('page_title:', page_title, 'page init');
+
+            //console.log("LOAD CONTACTS");
+
+            $f7.request.get('https://commercial.hyperefficient2.net/app/contacts_json?bypass=1').then((res) => {
+                // update user with new data
+                contacts = JSON.parse(res.data);
+
+                contacts_array = Object.keys(contacts).map((key) => [{initial: key, names: contacts[key]}]);
+
+                //console.log("CONTACTS:", contacts, contacts_array);
+
+                setTimeout(() => {
+
+                    listify();
+
+                }, 1000);
+
+            }).catch(function (err) {
+                console.log("HTTP ERROR");
+                console.log(err.xhr);
+                console.log(err.status);
+                console.log(err.message);
+                MainAppErrors.error_http("Could not load contacts");
+            });
+
+        });
+
+        $on('pageMounted', (e, page) => {
+            console.log('page_title:', page_title, 'page mounted');
+        });
+        $on('pageBeforeIn', (e, page) => {
+            console.log('page_title:', page_title, 'page before in');
+        });
+        $on('pageAfterIn', (e, page) => {
+            console.log('page_title:', page_title, 'page after in');
+        });
+        $on('pageBeforeOut', (e, page) => {
+            console.log('page_title:', page_title, 'page before out');
+        });
+        $on('pageAfterOut', (e, page) => {
+            console.log('page_title:', page_title, 'page after out');
+        });
+        $on('pageBeforeUnmount', (e, page) => {
+            console.log('page_title:', page_title, 'page before unmount');
+        });
+        $on('pageBeforeRemove', (e, page) => {
+            console.log('page_title:', page_title, 'page before remove');
+        });
+
+        return $render;
+    }
+</script>w
